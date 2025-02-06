@@ -53,26 +53,30 @@
 
             </div>
 
-            <div class="col-md-10 col-lg-8 col-xl-7 pt-6">
-                <div class="list-group">
-                    {% for comment in comments %}
 
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100">
-                            <img
-                                    class="img-fluid rounded-circle"
-                                    width="80"
-                                    height="20"
-                                    src="{{ gravatar_url(comment.author.email) }}"
-                                    alt="..."
-                            />
-                            <h5 class="mb-1 ml-6">{{ comment.author.name }}</h5>
-                            <p class="mb-1"> {{comment.text|safe}}</p>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7 mb-5">
+                    <div class="card text-body">
+                        {% for comment in comments %}
+
+                            <div class="card-body p-4">
+                            <div class="d-flex flex-start">
+                                <img class="rounded-circle shadow-1-strong me-3"
+                                     src="{{ gravatar_url(comment.author.email) }}"
+                                     width="60" height="60">
+                                <div>
+                                    <h6 class="fw-bold mb-1">{{ comment.author.name }}</h6>
+
+                                    <p class="mb-0">
+                                        {{ comment.text|safe }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
-
-                    </a>
-                    {% endfor %}
+                        <hr class="my-0">
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
