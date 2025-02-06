@@ -3,9 +3,7 @@ from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, URL
+from forms import PostForm
 from flask_ckeditor import CKEditor, CKEditorField
 from datetime import date
 
@@ -47,18 +45,29 @@ class BlogPost(db.Model):
     author: Mapped[str] = mapped_column(String(250), nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
 
-# MAKE form
-class PostForm(FlaskForm):
-    title = StringField("Post Title", validators=[DataRequired()])
-    subtitle = StringField("Post Subtitle", validators=[DataRequired()])
-    author = StringField("Post Author", validators=[DataRequired()])
-    img_url = StringField("Image URL", validators=[DataRequired(), URL()])
-    body = CKEditorField("Post Content", validators=[DataRequired()])
-    submit = SubmitField("Submit Post")
+
 
 
 with app.app_context():
     db.create_all()
+
+
+# TODO: Use Werkzeug to hash the user's password when creating a new user.
+@app.route('/register')
+def register():
+    return render_template("register.html")
+
+
+# TODO: Retrieve a user from the database based on their email.
+@app.route('/login')
+def login():
+    return render_template("login.html")
+
+
+@app.route('/logout')
+def logout():
+    return redirect(url_for('get_all_posts'))
+
 
 
 @app.route('/')
