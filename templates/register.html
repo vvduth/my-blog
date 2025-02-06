@@ -23,6 +23,17 @@ include "header.html" %}
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         <!--TODO: render your registration form here-->
+        {{ render_form(form, novalidate=True,render_kw={"style": "font-weight: bold;"} ) }}
+          {% with messages = get_flashed_messages() %}
+        {% if messages %}
+
+        {% for message in messages %}
+        <p class="flash">{{ message }}</p>
+        {% endfor %}
+
+        {% endif %}
+        {% endwith %}
+        {% block body %}{% endblock %}
       </div>
     </div>
   </div>
