@@ -9,7 +9,7 @@ from flask_ckeditor import CKEditorField
 class PostForm(FlaskForm):
     title = StringField("Post Title", validators=[DataRequired()])
     subtitle = StringField("Post Subtitle", validators=[DataRequired()])
-    author = StringField("Post Author", validators=[DataRequired()])
+    #author = StringField("Post Author", validators=[DataRequired()])
     img_url = StringField("Image URL", validators=[DataRequired(), URL()])
     body = CKEditorField("Post Content", validators=[DataRequired()])
     submit = SubmitField("Submit Post")
@@ -29,3 +29,6 @@ class LoginForm(FlaskForm):
 
 
 # TODO: Create a CommentForm so users can leave comments below posts
+class CommentForm(FlaskForm):
+    comment_text = CKEditorField("Comment", validators=[DataRequired()])
+    submit = SubmitField("Submit Comment")

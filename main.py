@@ -6,8 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Text, ForeignKey
 from werkzeug.security import generate_password_hash, check_password_hash
-
-from forms import PostForm, RegisterForm, LoginForm
+from hashlib import md5
+from forms import PostForm, RegisterForm, LoginForm, CommentForm
 from flask_ckeditor import CKEditor, CKEditorField
 from datetime import date
 from flask_login import LoginManager, UserMixin, login_user,logout_user,current_user
@@ -39,6 +39,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
+# Initialize gravatar
+
+def gravatar_url(email, size=100, rating='g', default='retro', force_default=False):
+    hash_value = md5(email.lower().encode('utf-8')).hexdigest()
+    return f"https://www.gravatar.com/avatar/{hash_value}?s={size}&d={default}&r={rating}&f={force_default}"
+
+
 # CONFIGURE TABLES
 class User(UserMixin,db.Model):
     __tablename__ = "users"
@@ -47,6 +54,7 @@ class User(UserMixin,db.Model):
     password: Mapped[str] = mapped_column(String(100))
     name: Mapped[str] = mapped_column(String(1000))
     posts = relationship("BlogPost",back_populates="author")
+    comments = relationship("Comment", back_populates="author")
 
 
 class BlogPost(db.Model):
@@ -60,8 +68,16 @@ class BlogPost(db.Model):
     # Create Foreign Key, "users.id" the users refers to the tablename of User.
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     author: Mapped[User] = relationship("User", back_populates="posts")
+    comments = relationship("Comment", back_populates="post")
 
-
+class Comment(db.Model):
+    __tablename__ = "comments"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+    author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
+    author: Mapped[User] = relationship("User", back_populates="comments")
+    post_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("blog_posts.id"))
+    post: Mapped[BlogPost] = relationship("BlogPost", back_populates="comments")
 
 with app.app_context():
     db.create_all()
@@ -78,10 +94,10 @@ def load_user(user_id: str) -> User | None:
 def is_admin(func):
     @wraps(func)
     def decorated_func(*args, **kwargs):
-        user_id = current_user.get_id()
-        print("user_id: ", user_id)
+        user_id = int(current_user.get_id())
+        print(user_id)
         if user_id == 1:
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
         else:
             return abort(403)
     return decorated_func
@@ -133,7 +149,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('get_all_posts'), 403)
+    return redirect(url_for('get_all_posts'))
 
 
 
@@ -143,16 +159,29 @@ def get_all_posts():
     result = db.session.execute(db.select(BlogPost))
     posts = result.scalars().all() or []
     print("posts: ", posts)
-    return render_template("index.html", all_posts=[])
+    return render_template("index.html", all_posts=posts)
 
 
 
 # TODO: Add a route so that you can click on individual posts.
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def show_post(post_id):
     # TODO: Retrieve a BlogPost from the database based on the post_id
     requested_post = db.get_or_404(BlogPost, post_id)
-    return render_template("post.html", post=requested_post)
+    comments = requested_post.comments
+    print("comments: ", comments)
+    form = CommentForm()
+    if form.validate_on_submit():
+        new_comment = Comment(
+            text=form.comment_text.data,
+            author=current_user,
+            post=requested_post
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        flash("Comment added")
+        return redirect(url_for('show_post', post_id=post_id))
+    return render_template("post.html", post=requested_post, form=form, comments = comments, gravatar_url=gravatar_url)
 
 
 # TODO: add_new_post() to create a new blog post
@@ -165,10 +194,10 @@ def add_new_post():
         new_post = BlogPost(
             title=form.title.data,
             subtitle=form.subtitle.data,
-            author=form.author.data,
             img_url=form.img_url.data,
             date=date.today().strftime("%B %d, %Y"),
-            body=form.body.data
+            body=form.body.data,
+            author=current_user
         )
         db.session.add(new_post)
         db.session.commit()

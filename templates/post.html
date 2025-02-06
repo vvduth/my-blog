@@ -1,43 +1,82 @@
 {% include "header.html" %}
-
+{% from 'bootstrap5/form.html' import render_form %}
 <!-- Page Header-->
 <header class="masthead" style="background-image: url('{{post.img_url}}')">
-  <div class="container position-relative px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class="post-heading">
-          <h1>{{ post.title }}</h1>
-          <h2 class="subheading">{{ post.subtitle }}</h2>
-          <span class="meta"
-            >Posted by
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-heading">
+                    <h1>{{ post.title }}</h1>
+                    <h2 class="subheading">{{ post.subtitle }}</h2>
+                    <span class="meta"
+                    >Posted by
             <a href="#">{{ post.author }}</a>
             on {{ post.date }}
           </span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
 
 <!-- Post Content -->
 <article>
-  <div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        {{ post.body|safe }}
-        {% if current_user.id == 1 %}
-        <div class="d-flex justify-content-end mb-4">
-          <!-- TODO: Editing posts-->
-          <a
-            class="btn btn-primary float-right"
-            href="{{ url_for('edit_post', post_id=post.id) }}"
-            >Edit Post</a
-          >
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7 mb-5">
+                {{ post.body|safe }}
+                {% if current_user.id == 1 %}
+                <div class="d-flex justify-content-end mb-4">
+                    <!-- TODO: Editing posts-->
+                    <a
+                            class="btn btn-primary float-right"
+                            href="{{ url_for('edit_post', post_id=post.id) }}"
+                    >Edit Post</a
+                    >
+                </div>
+                {% endif %}
+
+                {% if current_user.id %}
+                {{ ckeditor.load() }}
+                {{ ckeditor.config(name="comment_text") }}
+                {{ render_form(form,novalidate=True, render_kw={"style": "font-weight: bold;"}) }}
+                {% endif %}
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+
+                {% for message in messages %}
+                <p class="flash">{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+            </div>
+
+            <div class="col-md-10 col-lg-8 col-xl-7 pt-6">
+                <div class="list-group">
+                    {% for comment in comments %}
+
+                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                        <div class="d-flex w-100">
+                            <img
+                                    class="img-fluid rounded-circle"
+                                    width="80"
+                                    height="20"
+                                    src="{{ gravatar_url(comment.author.email) }}"
+                                    alt="..."
+                            />
+                            <h5 class="mb-1 ml-6">{{ comment.author.name }}</h5>
+                            <p class="mb-1"> {{comment.text|safe}}</p>
+                        </div>
+
+
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-        {% endif %}
-      </div>
     </div>
-  </div>
 </article>
 
 {% include "footer.html" %}
