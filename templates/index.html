@@ -28,20 +28,22 @@
           <h3 class="post-subtitle">{{ post.subtitle }}</h3>
         </a>
         <!-- TODO: Add code to delete posts below -->
-        <a href="{{ url_for('delete_post', post_id=post.id) }}" class="btn btn-danger">
-           ✘
-        </a>
+
         <p class="post-meta">
           Posted by
           <a href="#">{{post.author}}</a>
           on {{post.date}}
+          <a href="{{ url_for('delete_post', post_id=post.id) }}">
+           ✘
+        </a>
         </p>
       </div>
       <!-- Divider-->
       <hr class="my-4" />
       {% endfor %}
 
-      <!-- New Post -->
+      {% if current_user.id == 1 %}
+        <!-- New Post -->
       <div class="d-flex justify-content-end mb-4">
       <!-- TODO: Adding new posts -->
         <a
@@ -50,6 +52,7 @@
           >Create New Post</a
         >
       </div>
+      {% endif %}
 
       <!-- Pager-->
       <div class="d-flex justify-content-end mb-4">

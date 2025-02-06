@@ -1,15 +1,16 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from functools import wraps
+
+from flask import Flask, render_template, redirect, url_for, flash, abort
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Text
-from sqlalchemy.testing.pickleable import Mixin
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import Integer, String, Text, ForeignKey
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from forms import PostForm, RegisterForm, LoginForm
 from flask_ckeditor import CKEditor, CKEditorField
 from datetime import date
-from flask_login import LoginManager, UserMixin, login_user
+from flask_login import LoginManager, UserMixin, login_user,logout_user,current_user
 
 '''
 Make sure the required packages are installed: 
@@ -38,22 +39,28 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
-
 # CONFIGURE TABLES
+class User(UserMixin,db.Model):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    email: Mapped[str] = mapped_column(String(100), unique=True)
+    password: Mapped[str] = mapped_column(String(100))
+    name: Mapped[str] = mapped_column(String(1000))
+    posts = relationship("BlogPost",back_populates="author")
+
+
 class BlogPost(db.Model):
+    __tablename__ = "blog_posts"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
     date: Mapped[str] = mapped_column(String(250), nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)
-    author: Mapped[str] = mapped_column(String(250), nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
+    # Create Foreign Key, "users.id" the users refers to the tablename of User.
+    author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
+    author: Mapped[User] = relationship("User", back_populates="posts")
 
-class User(UserMixin,db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    email: Mapped[str] = mapped_column(String(100), unique=True)
-    password: Mapped[str] = mapped_column(String(100))
-    name: Mapped[str] = mapped_column(String(1000))
 
 
 with app.app_context():
@@ -64,8 +71,20 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 @login_manager.user_loader
-def load_user(user_id):
-    return db.get_or_404(User, user_id)
+def load_user(user_id: str) -> User | None:
+    return User.query.get(int(user_id))
+
+# decorator
+def is_admin(func):
+    @wraps(func)
+    def decorated_func(*args, **kwargs):
+        user_id = current_user.get_id()
+        print("user_id: ", user_id)
+        if user_id == 1:
+            func(*args, **kwargs)
+        else:
+            return abort(403)
+    return decorated_func
 
 # TODO: Use Werkzeug to hash the user's password when creating a new user.
 @app.route('/register',methods = ["POST", "GET"])
@@ -113,7 +132,8 @@ def login():
 
 @app.route('/logout')
 def logout():
-    return redirect(url_for('get_all_posts'))
+    logout_user()
+    return redirect(url_for('get_all_posts'), 403)
 
 
 
@@ -121,8 +141,11 @@ def logout():
 def get_all_posts():
     # TODO: Query the database for all the posts. Convert the data to a python list.
     result = db.session.execute(db.select(BlogPost))
-    posts = result.scalars().all()
-    return render_template("index.html", all_posts=posts)
+    posts = result.scalars().all() or []
+    print("posts: ", posts)
+    return render_template("index.html", all_posts=[])
+
+
 
 # TODO: Add a route so that you can click on individual posts.
 @app.route('/post/<int:post_id>')
@@ -133,7 +156,9 @@ def show_post(post_id):
 
 
 # TODO: add_new_post() to create a new blog post
+
 @app.route('/new-post', methods=['GET', 'POST'])
+@is_admin
 def add_new_post():
     form = PostForm()
     if form.validate_on_submit():
@@ -152,6 +177,7 @@ def add_new_post():
 
 # TODO: edit_post() to change an existing blog post
 @app.route('/edit-post/<int:post_id>', methods=['GET', 'POST'])
+@is_admin
 def edit_post(post_id):
     post_to_update = db.get_or_404(BlogPost, post_id)
     form = PostForm(
