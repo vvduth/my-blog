@@ -96,7 +96,7 @@ def is_admin(func):
     def decorated_func(*args, **kwargs):
         user_id = int(current_user.get_id())
         print(user_id)
-        if user_id == 1:
+        if user_id == 1 or user_id == 2:
             return func(*args, **kwargs)
         else:
             return abort(403)
@@ -219,7 +219,6 @@ def edit_post(post_id):
     if form.validate_on_submit():
         post_to_update.title = form.title.data
         post_to_update.subtitle = form.subtitle.data
-        post_to_update.author = form.author.data
         post_to_update.img_url = form.img_url.data
         post_to_update.body = form.body.data
         db.session.commit()
