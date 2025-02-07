@@ -1,16 +1,21 @@
+import smtplib
 from functools import wraps
 
-from flask import Flask, render_template, redirect, url_for, flash, abort
+from flask import Flask, render_template, redirect, url_for, flash, abort, request
+from flask.cli import load_dotenv
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, Text, ForeignKey
+from sqlalchemy import Integer, String, Text
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 from forms import PostForm, RegisterForm, LoginForm, CommentForm
-from flask_ckeditor import CKEditor, CKEditorField
+from flask_ckeditor import CKEditor
 from datetime import date
+import os
 from flask_login import LoginManager, UserMixin, login_user,logout_user,current_user
+
+load_dotenv()
 
 '''
 Make sure the required packages are installed: 
@@ -26,7 +31,7 @@ This will install the packages from the requirements.txt for this project.
 '''
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get("FLASK_KEY")
 Bootstrap5(app)
 
 ckeditor = CKEditor()
@@ -35,7 +40,7 @@ ckeditor.init_app(app)
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI", "sqlite:///posts.db")
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
@@ -239,10 +244,51 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/contact")
+@app.route("/contact",  methods=["GET", "POST"])
 def contact():
-    return render_template("contact.html")
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        phone = request.form.get("phone")
+        message = request.form.get("message")
+        print(f"<h3>"
+              f"<p>Name: {name}, email {email}, phone {phone} message {message}</p>"
+              f"</h3>")
+        with smtplib.SMTP("smtp.gmail.com", 587) as connection:
+            connection.starttls()
+            connection.login(user=os.environ.get("MY_EMAIL"), password=os.environ.get("MY_PASSWORD"))
+            connection.sendmail(
+                from_addr=email,
+                to_addrs=email,
+                msg=f"Subject:Message from {name}\n\n Hello! {message}."
+            )
+        mess_sent = "Message sent"
+        return render_template("contact.html", message_sent=mess_sent)
+    else:
+        return render_template("contact.html")
+
+
+@app.route("/form-entry", methods=["POST"])
+def receive_data():
+    name = request.form.get("name")
+    email = request.form.get("email")
+    phone = request.form.get("phone")
+    message = request.form.get("message")
+
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as connection:
+        connection.starttls()
+        connection.login(user=os.environ.get("MY_EMAIL"), password=os.environ.get("MY_PASSWORD"))
+        connection.sendmail(
+            from_addr=email,
+            to_addrs=email,
+            msg=f"Subject:Message from {name}\n\n Hello! {message}."
+        )
+
+    return (f"<h3>"
+          f"<p>Name: {name}, email {email}, phone {phone} message {message}</p>"
+          f"</h3>")
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5003)
+    app.run(debug=False, port=5003)

@@ -83,12 +83,19 @@
               <label for="message">Message</label>
             </div>
             <br />
+            {% if message_sent %}
+
+              <div class="text-center text-success mb-3">
+                Sent!
+              </div>
+
+            {% endif %}
             <button
               class="btn btn-danger text-uppercase"
               id="submitButton"
               type="submit"
             >
-              NOT USED in Day 67
+              Send Message
             </button>
           </form>
         </div>
