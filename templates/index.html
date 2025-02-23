@@ -54,9 +54,26 @@
       </div>
       {% endif %}
 
+      <div class="d-flex">
+
+
+      {% if page_index > 1 %}
+       <!-- Pager-->
+      <div class="justify-content-start mb-4">
+        <a class="btn btn-primary text-uppercase"
+        href="{{ url_for('get_all_posts', page_index=page_index - 1) }}"
+        >Previous ←</a>
+      </div>
+      {% endif %}
+
+        {% if page_index < total_pages %}
       <!-- Pager-->
-      <div class="d-flex justify-content-end mb-4">
-        <a class="btn btn-secondary text-uppercase" href="#!">Older Posts →</a>
+      <div class="justify-content-end mb-4">
+        <a class="btn btn-secondary text-uppercase"
+        href="{{ url_for('get_all_posts', page_index=page_index + 1) }}"
+        >Older Posts →</a>
+      </div>
+      {% endif %}
       </div>
     </div>
   </div>

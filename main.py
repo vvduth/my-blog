@@ -41,6 +41,7 @@ ckeditor.init_app(app)
 class Base(DeclarativeBase):
     pass
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI", "sqlite:///posts.db")
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
@@ -160,11 +161,14 @@ def logout():
 
 @app.route('/')
 def get_all_posts():
+    post_per_page = 4
+    page_index = request.args.get('page_index', 1, type=int)
     # TODO: Query the database for all the posts. Convert the data to a python list.
-    result = db.session.execute(db.select(BlogPost))
-    posts = result.scalars().all() or []
-    print("posts: ", posts)
-    return render_template("index.html", all_posts=posts)
+    #result = db.session.execute(db.select(BlogPost).order_by(BlogPost.date.desc()).limit(post_per_page))
+    result = db.paginate(db.select(BlogPost).order_by(BlogPost.date.desc()), page=page_index, per_page=post_per_page)
+    # posts = result.scalars().all() or []
+    posts = result.items or []
+    return render_template("index.html", all_posts=posts, page_index=page_index, total_pages = result.pages)
 
 
 
