@@ -2,12 +2,24 @@
 
 This project is a full-stack web application built using Flask, a micro web framework for Python. The application serves as a blogging platform where users can register, log in, create, edit, and delete blog posts. It also includes features for users to leave comments on posts.
 
+## 🌐 Live Demo
+
+**The application is live and deployed on AWS EC2!**  
+**Visit: [http://13.60.94.174/](http://13.60.94.174/)**
+
+Experience the full functionality including user registration, blog creation, commenting system, and admin features in a production environment running on Amazon Linux 2023 with Nginx and Gunicorn.
+
 ## Technologies Used
 
 - **Backend:** Python, Flask, SQLAlchemy, Flask-Login, Flask-WTF, Flask-Bootstrap, Flask-CKEditor
 - **Frontend:** HTML, CSS, JavaScript, Bootstrap
-- **Database:** PostgreSQL (with fallback to SQLite)
-- **Deployment:** Gunicorn, Procfile for deployment configuration
+- **Database:** PostgreSQL (Neon Database) with SQLite fallback
+- **Deployment:** 
+  - **Cloud Platform:** AWS EC2 (Amazon Linux 2023, t2.micro free tier)
+  - **Web Server:** Nginx (reverse proxy)
+  - **WSGI Server:** Gunicorn
+  - **Process Management:** systemd service
+- **Version Control:** Git/GitHub
 
 ## Key Features
 
@@ -38,30 +50,31 @@ This project is a full-stack web application built using Flask, a micro web fram
 7. **Environment Configuration:**
    - Environment variables for sensitive information (e.g., database URI, email credentials).
 
-8. **Deployment:**
-   - Configured for deployment using Gunicorn and a Procfile.
+8. **Production Deployment:**
+   - Configured for high-availability deployment with Nginx and Gunicorn.
+   - Systemd service management for automatic restart and process monitoring.
 
-## Installation
+## Installation & Local Development
 
-1. Clone the repository:
-   ```sh
+1. **Clone the repository:**
+   ```bash
    git clone https://github.com/vvduth/advance-blog.git
    cd advance-blog
    ```
 
-2. Create a virtual environment and activate it:
-   ```sh
+2. **Create a virtual environment and activate it:**
+   ```bash
    python -m venv .venv
    .venv\Scripts\activate  # On Windows
    # source .venv/bin/activate  # On MacOS/Linux
    ```
 
-3. Install the required packages:
-   ```sh
+3. **Install the required packages:**
+   ```bash
    pip install -r requirements.txt
    ```
 
-4. Set up environment variables:
+4. **Set up environment variables:**
    Create a `.env` file in the root directory and add the following:
    ```dotenv
    FLASK_KEY=your_secret_key
@@ -71,35 +84,44 @@ This project is a full-stack web application built using Flask, a micro web fram
    DB_URI=your_database_uri
    ```
 
-5. Initialize the database:
-   ```sh
-   flask db init
-   flask db migrate
-   flask db upgrade
+5. **Run the Flask application:**
+   ```bash
+   python main.py
    ```
 
-## Running the Application
+6. **Open your web browser and go to `http://127.0.0.1:5003/`**
 
-1. Run the Flask application:
-   ```sh
-   flask run
-   ```
+## Production Deployment (AWS EC2)
 
-2. Open your web browser and go to `http://127.0.0.1:5000/`.
+### Infrastructure
+- **Platform:** AWS EC2 t2.micro (Free Tier eligible)
+- **Operating System:** Amazon Linux 2023
+- **Database:** Neon PostgreSQL (cloud-hosted)
+- **Reverse Proxy:** Nginx
+- **Application Server:** Gunicorn with 2 workers
+- **Process Management:** systemd
 
-## Deployment
+### Deployment Architecture
+```
+Internet → AWS Security Group → Nginx (Port 80) → Gunicorn (Port 8000) → Flask App
+                                    ↓
+                              Static Files (Direct Serve)
+```
 
-1. Install Gunicorn:
-   ```sh
-   pip install gunicorn
-   ```
+### Key Configuration Files
+- **Nginx Config:** `/etc/nginx/conf.d/advance-blog.conf`
+- **Systemd Service:** `/etc/systemd/system/advance-blog.service`
+- **Gunicorn Config:** `gunicorn_config.py`
 
-2. Create a `Procfile` in the root directory with the following content:
-   ```sh
-   web: gunicorn main:app
-   ```
+### Monitoring & Logs
+```bash
+# Application logs
+sudo journalctl -u advance-blog -f
 
-3. Deploy to your preferred platform (e.g., Heroku, AWS).
+# Nginx logs  
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log
+```
 
 ## Example Code Snippets
 
@@ -167,6 +189,18 @@ def show_post(post_id):
     return render_template("post.html", post=requested_post, form=form, comments=comments, gravatar_url=gravatar_url)
 ```
 
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+---
+
+**🚀 Ready to explore? Visit the live application at [http://13.60.94.174/](http://13.60.94.174/) and create your first blog post!**
