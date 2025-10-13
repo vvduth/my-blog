@@ -1,6 +1,6 @@
 {% include "header.html" %}
 
-<!-- Page Header-->
+<!-- Enhanced Page Header-->
 <header
   class="masthead"
   style="background-image: url('../static/assets/img/home-bg.jpg')"
@@ -9,71 +9,122 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="site-heading">
-          <h1>Clean Blog</h1>
-          <span class="subheading">A Blog Theme by Start Bootstrap</span>
+          <h1>ModernBlog</h1>
+          <span class="subheading">Share Your Stories, Connect with the World</span>
         </div>
       </div>
     </div>
   </div>
 </header>
-<!-- Main Content-->
-<div class="container px-4 px-lg-5">
-  <div class="row gx-4 gx-lg-5 justify-content-center">
-    <div class="col-md-10 col-lg-8 col-xl-7">
-      <!-- Post preview-->
-      {% for post in all_posts %}
-      <div class="post-preview">
-        <a href="{{ url_for('show_post', post_id=post.id) }}">
-          <h2 class="post-title">{{ post.title }}</h2>
-          <h3 class="post-subtitle">{{ post.subtitle }}</h3>
-        </a>
-        <!-- TODO: Add code to delete posts below -->
 
-        <p class="post-meta">
-          Posted by
-          <a href="#">{{post.author.name}}</a>
-          on {{post.date}}
-          <a href="{{ url_for('delete_post', post_id=post.id) }}">
-           ✘
-        </a>
-        </p>
-      </div>
-      <!-- Divider-->
-      <hr class="my-4" />
-      {% endfor %}
+<!-- Enhanced Main Content-->
+<div class="blog-posts-container">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        
+        {% if all_posts %}
+        <!-- Enhanced Post previews-->
+        {% for post in all_posts %}
+        <article class="post-preview animate-on-scroll">
+          <a href="{{ url_for('show_post', post_id=post.id) }}" class="text-decoration-none">
+            <h2 class="post-title">{{ post.title }}</h2>
+            <h3 class="post-subtitle">{{ post.subtitle }}</h3>
+          </a>
+          
+          <div class="post-meta">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-user-circle me-2"></i>
+              <span>
+                Posted by <a href="#" class="text-decoration-none">{{ post.author.name }}</a>
+                on {{ post.date }}
+              </span>
+            </div>
+            
+            {% if current_user.id == 1 or current_user.id == 2 %}
+            <div class="post-actions d-flex align-items-center gap-2">
+              <a href="{{ url_for('edit_post', post_id=post.id) }}" 
+                 class="btn btn-sm btn-outline-primary"
+                 title="Edit Post">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a href="{{ url_for('delete_post', post_id=post.id) }}" 
+                 class="delete-post-btn"
+                 title="Delete Post">
+                <i class="fas fa-trash"></i>
+              </a>
+            </div>
+            {% endif %}
+          </div>
+        </article>
+        {% endfor %}
+        
+        {% else %}
+        <!-- No posts message -->
+        <div class="text-center py-5">
+          <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+          <h3 class="text-muted">No Posts Yet</h3>
+          <p class="text-muted">Be the first to share your story!</p>
+          {% if current_user.id == 1 or current_user.id == 2 %}
+          <a href="{{ url_for('add_new_post') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Create First Post
+          </a>
+          {% endif %}
+        </div>
+        {% endif %}
 
-      {% if current_user.id == 1 or current_user.id == 2  %}
-        <!-- New Post -->
-      <div class="d-flex justify-content-end mb-4">
-      <!-- TODO: Adding new posts -->
-        <a
-          class="btn btn-primary float-right"
-          href="{{ url_for('add_new_post') }}"
-          >Create New Post</a
-        >
-      </div>
-      {% endif %}
+        {% if current_user.id == 1 or current_user.id == 2 %}
+        <!-- Create New Post Button -->
+        <div class="text-center my-5">
+          <a href="{{ url_for('add_new_post') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Create New Post
+          </a>
+        </div>
+        {% endif %}
 
-      <div class="d-flex">
-
-
-      {% if page_index > 1 %}
-       <!-- Pager-->
-      <div class="justify-content-start mb-4">
-        <a class="btn btn-primary text-uppercase"
-        href="{{ url_for('get_all_posts', page_index=page_index - 1) }}"
-        >Previous ←</a>
-      </div>
-      {% endif %}
-
-        {% if page_index < total_pages %}
-      <!-- Pager-->
-      <div class="justify-content-end mb-4">
-        <a class="btn btn-secondary text-uppercase"
-        href="{{ url_for('get_all_posts', page_index=page_index + 1) }}"
-        >Older Posts →</a>
-      </div>
-      {% endif %}
+        <!-- Enhanced Pagination -->
+        {% if total_pages > 1 %}
+        <nav aria-label="Blog pagination" class="pagination-container">
+          <ul class="pagination justify-content-center">
+            {% if page_index > 1 %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('get_all_posts', page_index=page_index - 1) }}">
+                <i class="fas fa-chevron-left me-1"></i>Previous
+              </a>
+            </li>
+            {% endif %}
+            
+            {% for page_num in range(1, total_pages + 1) %}
+              {% if page_num == page_index %}
+                <li class="page-item active">
+                  <span class="page-link">{{ page_num }}</span>
+                </li>
+              {% elif page_num <= page_index + 2 and page_num >= page_index - 2 %}
+                <li class="page-item">
+                  <a class="page-link" href="{{ url_for('get_all_posts', page_index=page_num) }}">{{ page_num }}</a>
+                </li>
+              {% elif page_num == 1 or page_num == total_pages %}
+                <li class="page-item">
+                  <a class="page-link" href="{{ url_for('get_all_posts', page_index=page_num) }}">{{ page_num }}</a>
+                </li>
+              {% elif page_num == page_index - 3 or page_num == page_index + 3 %}
+                <li class="page-item disabled">
+                  <span class="page-link">...</span>
+                </li>
+              {% endif %}
+            {% endfor %}
+            
+            {% if page_index < total_pages %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('get_all_posts', page_index=page_index + 1) }}">
+                Next<i class="fas fa-chevron-right ms-1"></i>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+        
       </div>
     </div>
   </div>

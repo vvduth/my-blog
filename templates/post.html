@@ -19,65 +19,101 @@
     </div>
 </header>
 
-<!-- Post Content -->
-<article>
+<!-- Enhanced Post Content -->
+<article class="animate-on-scroll">
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7 mb-5">
-                {{ post.body|safe }}
-                {% if current_user.id == 1 %}
-                <div class="d-flex justify-content-end mb-4">
-                    <!-- TODO: Editing posts-->
-                    <a
-                            class="btn btn-primary float-right"
-                            href="{{ url_for('edit_post', post_id=post.id) }}"
-                    >Edit Post</a
-                    >
+                <!-- Post Body with enhanced typography -->
+                <div class="post-content">
+                    {{ post.body|safe }}
+                </div>
+                
+                <!-- Post Actions -->
+                {% if current_user.id == 1 or current_user.id == 2 %}
+                <div class="post-actions d-flex justify-content-end gap-2 my-4 py-3 border-top">
+                    <a href="{{ url_for('edit_post', post_id=post.id) }}" 
+                       class="btn btn-outline-primary">
+                        <i class="fas fa-edit me-1"></i>Edit Post
+                    </a>
+                    <a href="{{ url_for('delete_post', post_id=post.id) }}" 
+                       class="btn btn-outline-danger delete-post-btn">
+                        <i class="fas fa-trash me-1"></i>Delete Post
+                    </a>
                 </div>
                 {% endif %}
+                
+                <!-- Back to Posts Link -->
+                <div class="mb-4">
+                    <a href="{{ url_for('get_all_posts') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to All Posts
+                    </a>
+                </div>
 
-                {% if current_user.id %}
-                {{ ckeditor.load() }}
-                {{ ckeditor.config(name="comment_text") }}
-                {{ render_form(form,novalidate=True, render_kw={"style": "font-weight: bold;"}) }}
-                {% endif %}
-
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-
-                {% for message in messages %}
-                <p class="flash">{{ message }}</p>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
-
+                <!-- Enhanced Comments Section -->
+                <div class="comments-section animate-on-scroll">
+                    <h4 class="mb-4">
+                        <i class="fas fa-comments me-2"></i>
+                        Comments ({{ comments|length }})
+                    </h4>
+                    
+                    {% if current_user.is_authenticated %}
+                    <!-- Comment Form -->
+                    <div class="comment-form-container mb-5 p-4 bg-light rounded">
+                        <h5 class="mb-3">Leave a Comment</h5>
+                        {{ ckeditor.load() }}
+                        {{ ckeditor.config(name="comment_text") }}
+                        {{ render_form(form, novalidate=True, render_kw={"class": "comment-form"}) }}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <a href="{{ url_for('login') }}" class="alert-link">Login</a> to leave a comment
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {% for message in messages %}
+                        <i class="fas fa-check-circle me-2"></i>{{ message }}
+                        {% endfor %}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                
             </div>
-
-
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7 mb-5">
-                    <div class="card text-body">
-                        {% for comment in comments %}
-
-                            <div class="card-body p-4">
-                            <div class="d-flex flex-start">
-                                <img class="rounded-circle shadow-1-strong me-3"
-                                     src="{{ gravatar_url(comment.author.email) }}"
-                                     width="60" height="60">
-                                <div>
-                                    <h6 class="fw-bold mb-1">{{ comment.author.name }}</h6>
-
-                                    <p class="mb-0">
-                                        {{ comment.text|safe }}
-                                    </p>
-                                </div>
+        </div>
+        
+        <!-- Enhanced Comments Display -->
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                {% if comments %}
+                <div class="comments-list">
+                    {% for comment in comments %}
+                    <div class="comment-card animate-on-scroll">
+                        <div class="d-flex">
+                            <img class="comment-avatar me-3"
+                                 src="{{ gravatar_url(comment.author.email) }}"
+                                 alt="{{ comment.author.name }}'s avatar"
+                                 width="50" height="50">
+                            <div class="comment-content flex-grow-1">
+                                <div class="comment-author">{{ comment.author.name }}</div>
+                                <div class="comment-text">{{ comment.text|safe }}</div>
                             </div>
                         </div>
-
-                        <hr class="my-0">
-                        {% endfor %}
                     </div>
+                    {% endfor %}
                 </div>
+                {% else %}
+                <div class="text-center text-muted py-5">
+                    <i class="fas fa-comment-slash fa-2x mb-3"></i>
+                    <p>No comments yet. Be the first to share your thoughts!</p>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
