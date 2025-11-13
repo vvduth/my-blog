@@ -5,7 +5,7 @@ This project is a full-stack web application built using Flask, a micro web fram
 ## 🌐 Live Demo
 
 **The application is live and deployed on AWS EC2!**  
-**Visit: [http://13.60.94.174/](http://13.60.94.174/)**
+**Visit: [https://dukemblog.xyz/](https://dukemblog.xyz/)**
 
 Experience the full functionality including user registration, blog creation, commenting system, and admin features in a production environment running on Amazon Linux 2023 with Nginx and Gunicorn.
 
