@@ -163,12 +163,14 @@ def logout():
 def get_all_posts():
     post_per_page = 4
     page_index = request.args.get('page_index', 1, type=int)
-    # TODO: Query the database for all the posts. Convert the data to a python list.
-    #result = db.session.execute(db.select(BlogPost).order_by(BlogPost.date.desc()).limit(post_per_page))
-    result = db.paginate(db.select(BlogPost).order_by(BlogPost.date.desc()), page=page_index, per_page=post_per_page)
-    # posts = result.scalars().all() or []
+    # Order by ID descending to get newest posts first
+    result = db.paginate(
+        db.select(BlogPost).order_by(BlogPost.id.desc()), 
+        page=page_index, 
+        per_page=post_per_page
+    )
     posts = result.items or []
-    return render_template("index.html", all_posts=posts, page_index=page_index, total_pages = result.pages)
+    return render_template("index.html", all_posts=posts, page_index=page_index, total_pages=result.pages)
 
 
 
