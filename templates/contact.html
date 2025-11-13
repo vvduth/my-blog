@@ -1,107 +1,106 @@
 {% include "header.html" %}
 
-<!-- Page Header-->
-<header
-  class="masthead"
-  style="background-image: url('../static/assets/img/contact-bg.jpg')"
->
-  <div class="container position-relative px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class="page-heading">
-          {% if msg_sent: %}
-          <h1>Successfully sent your message</h1>
-          {% else: %}
-          <h1>Contact Me</h1>
-          {% endif %}
-          <span class="subheading">Have questions? I have answers.</span>
+<!-- Cyberpunk Contact Hero -->
+<div class="hero-cyber hero-cyber-sm">
+    <canvas id="matrix-rain"></canvas>
+    <div class="hero-content">
+        <div class="container px-4 px-lg-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    {% if msg_sent: %}
+                    <h1 class="cyber-glitch-text text-cyber-green" data-text="MESSAGE.SENT">
+                        MESSAGE.SENT
+                    </h1>
+                    <div class="terminal-text mt-3">
+                        <p><span class="text-cyber-green">></span> TRANSMISSION_COMPLETE</p>
+                    </div>
+                    {% else: %}
+                    <h1 class="cyber-glitch-text" data-text="CONTACT.SYS">
+                        CONTACT.SYS
+                    </h1>
+                    <div class="terminal-text mt-3">
+                        <p><span class="text-cyber-cyan">></span> ESTABLISH_CONNECTION...</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</header>
-<!-- Main Content-->
-<main class="mb-4">
-  <div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <p>
-          Want to get in touch? Fill out the form below to send me a message and
-          I will get back to you as soon as possible!
-        </p>
-        <div class="my-5">
-          <!-- * * * * * * * * * * * * * * *-->
-          <!-- * * Simplified SB Contact Form for the Tutorial* *-->
-          <form
-            id="contactForm"
-            name="sentMessage"
-            action="{{ url_for('contact') }}"
-            method="post"
-          >
-            <div class="form-floating">
-              <input
-                class="form-control"
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Enter your name..."
-                required
-              />
-              <label for="name">Name</label>
-            </div>
-            <div class="form-floating">
-              <input
-                class="form-control"
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Enter your email..."
-                required
-              />
-              <label for="email">Email address</label>
-            </div>
-            <div class="form-floating">
-              <input
-                class="form-control"
-                id="phone"
-                name="phone"
-                type="tel"
-                placeholder="Enter your phone number..."
-                required
-              />
-              <label for="phone">Phone Number</label>
-            </div>
-            <div class="form-floating">
-              <textarea
-                class="form-control"
-                id="message"
-                name="message"
-                placeholder="Enter your message here..."
-                required
-                style="height: 12rem"
-              ></textarea>
-              <label for="message">Message</label>
-            </div>
-            <br />
-            {% if message_sent %}
+</div>
 
-              <div class="text-center text-success mb-3">
-                Sent!
-              </div>
-
-            {% endif %}
-            <button
-              class="btn btn-danger text-uppercase"
-              id="submitButton"
-              type="submit"
-            >
-              Send Message
-            </button>
-          </form>
+<!-- Main Content -->
+<main class="py-5">
+    <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card-cyber">
+                    <div class="card-cyber-header">
+                        <h3 class="cyber-text-glow">
+                            <span class="cyber-bracket">[</span>SEND_MESSAGE<span class="cyber-bracket">]</span>
+                        </h3>
+                        <div class="terminal-text mt-2">
+                            <p><span class="text-cyber-cyan">></span> Fill out the form to transmit your message</p>
+                            <p><span class="text-cyber-pink">></span> I will respond as soon as possible</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-cyber-body">
+                        <form id="contactForm" name="sentMessage" action="{{ url_for('contact') }}" method="post" class="form-cyber">
+                            
+                            <div class="form-group-cyber mb-4">
+                                <label for="name" class="terminal-text">
+                                    <span class="text-cyber-cyan">NAME:</span>
+                                </label>
+                                <input class="form-control-cyber" id="name" name="name" type="text" 
+                                       placeholder="Enter your name..." required />
+                            </div>
+                            
+                            <div class="form-group-cyber mb-4">
+                                <label for="email" class="terminal-text">
+                                    <span class="text-cyber-pink">EMAIL:</span>
+                                </label>
+                                <input class="form-control-cyber" id="email" name="email" type="email" 
+                                       placeholder="user@domain.sys" required />
+                            </div>
+                            
+                            <div class="form-group-cyber mb-4">
+                                <label for="phone" class="terminal-text">
+                                    <span class="text-cyber-green">PHONE:</span>
+                                </label>
+                                <input class="form-control-cyber" id="phone" name="phone" type="tel" 
+                                       placeholder="+1-XXX-XXX-XXXX" required />
+                            </div>
+                            
+                            <div class="form-group-cyber mb-4">
+                                <label for="message" class="terminal-text">
+                                    <span class="text-cyber-cyan">MESSAGE:</span>
+                                </label>
+                                <textarea class="form-control-cyber" id="message" name="message" 
+                                          placeholder="Enter your message here..." required 
+                                          style="height: 12rem; resize: vertical;"></textarea>
+                            </div>
+                            
+                            {% if message_sent %}
+                            <div class="alert-cyber alert-cyber-success mb-4">
+                                <div class="terminal-text text-center">
+                                    <p class="mb-0">
+                                        <span class="text-cyber-green">SUCCESS:</span> MESSAGE_TRANSMITTED
+                                    </p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="text-center">
+                                <button class="btn-cyber btn-cyber-lg" id="submitButton" type="submit">
+                                    <span class="cyber-bracket">[</span>TRANSMIT_MESSAGE<span class="cyber-bracket">]</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </main>
 
 {% include "footer.html" %}

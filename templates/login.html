@@ -2,62 +2,111 @@
 {% block content %}
 {% include "header.html" %}
 
-<!-- Enhanced Page Header -->
-<header class="masthead" style="background-image: url('../static/assets/img/login-bg.jpg')">
-  <div class="container position-relative px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class="page-heading">
-          <h1><i class="fas fa-sign-in-alt me-3"></i>Log In</h1>
-          <span class="subheading">Welcome Back to Your Stories</span>
+<!-- Cyberpunk Login Hero -->
+<div class="hero-cyber hero-cyber-sm">
+    <canvas id="matrix-rain"></canvas>
+    <div class="hero-content">
+        <div class="container px-4 px-lg-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h1 class="cyber-glitch-text" data-text="ACCESS.GRANTED">
+                        <i class="fas fa-terminal me-3"></i>ACCESS.GRANTED
+                    </h1>
+                    <div class="terminal-text mt-3">
+                        <p><span class="text-cyber-cyan">></span> AUTHENTICATION_REQUIRED</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</header>
+</div>
 
-<!-- Enhanced Login Form -->
+<!-- Login Form -->
 <main class="py-5">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-6 col-md-8">
-        
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="alert alert-danger alert-dismissible fade show animate-on-scroll" role="alert">
-          {% for message in messages %}
-          <i class="fas fa-exclamation-triangle me-2"></i>{{ message }}
-          {% endfor %}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endif %}
-        {% endwith %}
-        
-        <!-- Login Form Card -->
-        <div class="card shadow-lg border-0 animate-on-scroll">
-          <div class="card-body p-5">
-            <div class="text-center mb-4">
-              <i class="fas fa-user-circle fa-3x text-primary mb-3"></i>
-              <h3>Welcome Back!</h3>
-              <p class="text-muted">Sign in to your account</p>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert-cyber alert-cyber-danger mb-4">
+                    <div class="terminal-text">
+                        {% for message in messages %}
+                        <p class="mb-0">
+                            <span class="text-cyber-pink">ERROR:</span> {{ message }}
+                        </p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endwith %}
+                
+                <!-- Login Card -->
+                <div class="card-cyber">
+                    <div class="card-cyber-header text-center">
+                        <i class="fas fa-user-circle fa-3x text-cyber-cyan mb-3"></i>
+                        <h3 class="cyber-text-glow">
+                            <span class="cyber-bracket">[</span>USER_LOGIN<span class="cyber-bracket">]</span>
+                        </h3>
+                        <div class="terminal-text mt-2">
+                            <p><span class="text-cyber-green">></span> ENTER_CREDENTIALS</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-cyber-body">
+                        <form method="POST" action="{{ url_for('login') }}" class="form-cyber" novalidate>
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="form-group-cyber mb-4">
+                                <label for="{{ form.email.id }}" class="terminal-text">
+                                    <span class="text-cyber-cyan">EMAIL:</span>
+                                </label>
+                                {{ form.email(class="form-control-cyber", placeholder="user@cyberblog.sys") }}
+                                {% if form.email.errors %}
+                                    <div class="terminal-text text-cyber-pink mt-2">
+                                        {% for error in form.email.errors %}
+                                            <small>ERROR: {{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group-cyber mb-4">
+                                <label for="{{ form.password.id }}" class="terminal-text">
+                                    <span class="text-cyber-pink">PASSWORD:</span>
+                                </label>
+                                {{ form.password(class="form-control-cyber", placeholder="••••••••") }}
+                                {% if form.password.errors %}
+                                    <div class="terminal-text text-cyber-pink mt-2">
+                                        {% for error in form.password.errors %}
+                                            <small>ERROR: {{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="text-center">
+                                {{ form.submit(class="btn-cyber btn-cyber-lg w-100") }}
+                            </div>
+                        </form>
+                        
+                        <div class="text-center mt-4">
+                            <div class="terminal-text">
+                                <p>
+                                    <span class="text-cyber-green">></span> NEW_USER? 
+                                    <a href="{{ url_for('register') }}" class="cyber-link">
+                                        <span class="cyber-bracket">[</span>REGISTER<span class="cyber-bracket">]</span>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
-            
-            {{ render_form(form, novalidate=True, render_kw={"class": "enhanced-form"}) }}
-            
-            <div class="text-center mt-4">
-              <p class="text-muted">Don't have an account? 
-                <a href="{{ url_for('register') }}" class="text-decoration-none">
-                  <strong>Register here</strong>
-                </a>
-              </p>
-            </div>
-          </div>
         </div>
-        
-      </div>
     </div>
-  </div>
 </main>
 
 {% include "footer.html" %}

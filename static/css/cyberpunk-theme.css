@@ -1,0 +1,638 @@
+/* 
+ * CYBERPUNK TERMINAL THEME - Retro-Futuristic Blog
+ * Terminal aesthetics with neon glow and glitch effects
+ */
+
+/* ===== CYBERPUNK COLOR PALETTE ===== */
+:root {
+  /* Neon Colors */
+  --cyber-neon-cyan: #00ffff;
+  --cyber-neon-pink: #ff00ff;
+  --cyber-neon-green: #00ff00;
+  --cyber-neon-yellow: #ffff00;
+  --cyber-neon-blue: #0080ff;
+  --cyber-neon-purple: #8000ff;
+  
+  /* Dark Terminal Palette */
+  --cyber-bg-dark: #0a0a0a;
+  --cyber-bg-darker: #050505;
+  --cyber-bg-terminal: #0d1117;
+  --cyber-bg-console: #161b22;
+  
+  /* Terminal Text Colors */
+  --cyber-text-primary: #00ffff;
+  --cyber-text-secondary: #00ff00;
+  --cyber-text-muted: #4a9eff;
+  --cyber-text-white: #e6e6e6;
+  --cyber-text-dim: #6a7b8c;
+  
+  /* Glitch Effects */
+  --glitch-color-1: #00ffff;
+  --glitch-color-2: #ff00ff;
+  
+  /* Terminal Grid */
+  --grid-color: rgba(0, 255, 255, 0.1);
+  
+  /* Typography */
+  --cyber-font-mono: 'Courier New', 'Consolas', 'Monaco', monospace;
+  
+  /* Spacing */
+  --cyber-spacing-sm: 1rem;
+  --cyber-spacing-md: 1.5rem;
+  --cyber-spacing-lg: 2.5rem;
+}
+
+/* ===== GLOBAL CYBERPUNK STYLES ===== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--cyber-font-mono);
+  line-height: 1.6;
+  color: var(--cyber-text-white);
+  background: var(--cyber-bg-dark);
+  overflow-x: hidden;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+/* Terminal Scanlines Effect */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanlines 8s linear infinite;
+}
+
+/* Grid Background */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.3;
+}
+
+/* ===== CYBERPUNK ANIMATIONS ===== */
+@keyframes scanlines {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(10px); }
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+}
+
+@keyframes neonPulse {
+  0%, 100% { 
+    text-shadow: 0 0 5px var(--cyber-neon-cyan),
+                 0 0 10px var(--cyber-neon-cyan),
+                 0 0 20px var(--cyber-neon-cyan);
+  }
+  50% { 
+    text-shadow: 0 0 10px var(--cyber-neon-cyan),
+                 0 0 20px var(--cyber-neon-cyan),
+                 0 0 30px var(--cyber-neon-cyan),
+                 0 0 40px var(--cyber-neon-cyan);
+  }
+}
+
+@keyframes terminalBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: var(--cyber-neon-cyan);
+    box-shadow: 0 0 5px var(--cyber-neon-cyan),
+                inset 0 0 5px var(--cyber-neon-cyan);
+  }
+  50% {
+    border-color: var(--cyber-neon-pink);
+    box-shadow: 0 0 10px var(--cyber-neon-pink),
+                inset 0 0 10px var(--cyber-neon-pink);
+  }
+}
+
+/* ===== CYBERPUNK TEXT EFFECTS ===== */
+.cyber-text-glow {
+  color: var(--cyber-neon-cyan);
+  text-shadow: 0 0 5px var(--cyber-neon-cyan),
+               0 0 10px var(--cyber-neon-cyan),
+               0 0 20px var(--cyber-neon-cyan);
+  animation: neonPulse 2s infinite;
+}
+
+.cyber-text-glitch {
+  position: relative;
+  animation: glitch 0.3s infinite;
+}
+
+.terminal-cursor::after {
+  content: '▮';
+  animation: terminalBlink 1s infinite;
+  color: var(--cyber-neon-green);
+}
+
+/* ===== CYBERPUNK NAVIGATION ===== */
+.navbar-cyber {
+  background: rgba(13, 17, 23, 0.95) !important;
+  border-bottom: 2px solid var(--cyber-neon-cyan);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1000;
+}
+
+.navbar-brand-cyber {
+  font-family: var(--cyber-font-mono);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--cyber-neon-cyan) !important;
+  text-shadow: 0 0 10px var(--cyber-neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.navbar-brand-cyber::before {
+  content: '> ';
+  color: var(--cyber-neon-green);
+}
+
+.nav-link-cyber {
+  font-family: var(--cyber-font-mono);
+  color: var(--cyber-text-white) !important;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem !important;
+  margin: 0 0.25rem;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.nav-link-cyber::before {
+  content: '[ ';
+  color: var(--cyber-neon-cyan);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.nav-link-cyber::after {
+  content: ' ]';
+  color: var(--cyber-neon-cyan);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.nav-link-cyber:hover::before,
+.nav-link-cyber:hover::after {
+  opacity: 1;
+}
+
+.nav-link-cyber:hover {
+  color: var(--cyber-neon-cyan) !important;
+  border-color: var(--cyber-neon-cyan);
+  box-shadow: 0 0 10px var(--cyber-neon-cyan),
+              inset 0 0 10px rgba(0, 255, 255, 0.1);
+}
+
+/* ===== CYBERPUNK HERO SECTION ===== */
+.hero-cyber {
+  background: var(--cyber-bg-terminal);
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid var(--cyber-neon-cyan);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+}
+
+.hero-cyber::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-title-cyber {
+  font-family: var(--cyber-font-mono);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--cyber-neon-cyan);
+  text-shadow: 0 0 10px var(--cyber-neon-cyan),
+               0 0 20px var(--cyber-neon-cyan),
+               0 0 30px var(--cyber-neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  animation: fadeInUp 1s ease-out;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle-cyber {
+  font-family: var(--cyber-font-mono);
+  font-size: 1.2rem;
+  color: var(--cyber-neon-green);
+  text-shadow: 0 0 5px var(--cyber-neon-green);
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+/* ===== CYBERPUNK CARDS ===== */
+.card-cyber {
+  background: var(--cyber-bg-console);
+  border: 2px solid var(--cyber-neon-cyan);
+  border-radius: 0;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3),
+              inset 0 0 20px rgba(0, 255, 255, 0.05);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-cyber::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    var(--cyber-neon-cyan), 
+    var(--cyber-neon-pink), 
+    var(--cyber-neon-cyan));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.card-cyber:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.6),
+              inset 0 0 30px rgba(0, 255, 255, 0.1);
+  animation: borderGlow 2s infinite;
+}
+
+.card-cyber:hover::before {
+  opacity: 0.5;
+}
+
+.post-title-cyber {
+  font-family: var(--cyber-font-mono);
+  color: var(--cyber-neon-cyan);
+  text-shadow: 0 0 5px var(--cyber-neon-cyan);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+.post-title-cyber::before {
+  content: '>> ';
+  color: var(--cyber-neon-green);
+}
+
+.post-subtitle-cyber {
+  color: var(--cyber-text-white);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.post-meta-cyber {
+  color: var(--cyber-text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid rgba(0, 255, 255, 0.2);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+/* Card Cyber Components */
+.card-cyber-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.card-cyber-body {
+  padding: 1.5rem;
+}
+
+.card-cyber-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(0, 255, 255, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.card-cyber-footer .admin-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+/* Responsive: Stack on small screens */
+@media (max-width: 576px) {
+  .card-cyber-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .card-cyber-footer .admin-actions {
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+}
+
+.card-cyber-title {
+  font-family: var(--cyber-font-mono);
+  color: var(--cyber-neon-cyan);
+  text-shadow: 0 0 5px var(--cyber-neon-cyan);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.card-cyber-subtitle {
+  color: var(--cyber-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* ===== CYBERPUNK BUTTONS ===== */
+.btn-cyber {
+  font-family: var(--cyber-font-mono);
+  background: transparent;
+  color: var(--cyber-neon-cyan);
+  border: 2px solid var(--cyber-neon-cyan);
+  padding: 0.75rem 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.btn-cyber::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--cyber-neon-cyan);
+  transition: left 0.3s;
+  z-index: -1;
+}
+
+.btn-cyber:hover {
+  color: var(--cyber-bg-dark);
+  box-shadow: 0 0 20px var(--cyber-neon-cyan);
+}
+
+.btn-cyber:hover::before {
+  left: 0;
+}
+
+.btn-cyber-secondary {
+  border-color: var(--cyber-neon-pink);
+  color: var(--cyber-neon-pink);
+}
+
+.btn-cyber-secondary::before {
+  background: var(--cyber-neon-pink);
+}
+
+.btn-cyber-secondary:hover {
+  box-shadow: 0 0 20px var(--cyber-neon-pink);
+}
+
+/* ===== CYBERPUNK FORMS ===== */
+.form-cyber .form-control {
+  background: var(--cyber-bg-console);
+  border: 2px solid var(--cyber-neon-cyan);
+  color: var(--cyber-text-white);
+  font-family: var(--cyber-font-mono);
+  padding: 0.75rem;
+  border-radius: 0;
+  transition: all 0.3s;
+}
+
+.form-cyber .form-control:focus {
+  background: var(--cyber-bg-terminal);
+  border-color: var(--cyber-neon-pink);
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.5),
+              inset 0 0 15px rgba(255, 0, 255, 0.1);
+  outline: none;
+  color: var(--cyber-text-white);
+}
+
+.form-cyber .form-label {
+  color: var(--cyber-neon-green);
+  text-shadow: 0 0 5px var(--cyber-neon-green);
+  font-family: var(--cyber-font-mono);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+}
+
+/* ===== CYBERPUNK FOOTER ===== */
+.footer-cyber {
+  background: var(--cyber-bg-terminal);
+  border-top: 2px solid var(--cyber-neon-cyan);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  padding: 3rem 0;
+  margin-top: 3rem;
+}
+
+.footer-cyber a {
+  color: var(--cyber-neon-cyan);
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.footer-cyber a:hover {
+  color: var(--cyber-neon-pink);
+  text-shadow: 0 0 10px var(--cyber-neon-pink);
+}
+
+/* ===== CYBERPUNK PAGINATION ===== */
+.pagination-cyber .page-link {
+  background: var(--cyber-bg-console);
+  border: 2px solid var(--cyber-neon-cyan);
+  color: var(--cyber-neon-cyan);
+  font-family: var(--cyber-font-mono);
+  margin: 0 0.25rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s;
+}
+
+.pagination-cyber .page-link:hover {
+  background: var(--cyber-neon-cyan);
+  color: var(--cyber-bg-dark);
+  box-shadow: 0 0 15px var(--cyber-neon-cyan);
+}
+
+.pagination-cyber .page-item.active .page-link {
+  background: var(--cyber-neon-cyan);
+  color: var(--cyber-bg-dark);
+  border-color: var(--cyber-neon-cyan);
+  box-shadow: 0 0 20px var(--cyber-neon-cyan);
+}
+
+/* ===== CYBERPUNK SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cyber-bg-dark);
+  border-left: 2px solid var(--cyber-neon-cyan);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cyber-neon-cyan);
+  box-shadow: 0 0 10px var(--cyber-neon-cyan);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyber-neon-pink);
+  box-shadow: 0 0 15px var(--cyber-neon-pink);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .hero-title-cyber {
+    font-size: 2rem;
+    letter-spacing: 3px;
+  }
+  
+  .hero-subtitle-cyber {
+    font-size: 1rem;
+  }
+  
+  .navbar-brand-cyber {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+  }
+  
+  .post-title-cyber {
+    font-size: 1.1rem;
+  }
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s;
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== GLITCH TEXT EFFECT ===== */
+.glitch-text {
+  position: relative;
+  color: var(--cyber-neon-cyan);
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--cyber-neon-pink);
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch 2s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -2px 0 var(--cyber-neon-green);
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch 3s infinite linear alternate-reverse;
+}
+
+/* ===== TERMINAL PROMPT ===== */
+.terminal-prompt {
+  color: var(--cyber-neon-green);
+  font-family: var(--cyber-font-mono);
+}
+
+.terminal-prompt::before {
+  content: '$ ';
+  color: var(--cyber-neon-cyan);
+}
+
+/* ===== CODE BLOCKS ===== */
+pre, code {
+  background: var(--cyber-bg-darker);
+  border: 1px solid var(--cyber-neon-cyan);
+  color: var(--cyber-neon-green);
+  font-family: var(--cyber-font-mono);
+  padding: 0.2rem 0.4rem;
+}
+
+pre {
+  padding: 1rem;
+  overflow-x: auto;
+}

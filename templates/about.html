@@ -1,41 +1,83 @@
 {% include "header.html" %}
 
-<!-- Page Header-->
-<header
-  class="masthead"
-  style="background-image: url('../static/assets/img/about-bg.jpg')"
->
-  <div class="container position-relative px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class="page-heading">
-          <h1>About Me</h1>
-          <span class="subheading">This is what I do.</span>
+<!-- Cyberpunk About Hero -->
+<div class="hero-cyber hero-cyber-sm">
+    <canvas id="matrix-rain"></canvas>
+    <div class="hero-content">
+        <div class="container px-4 px-lg-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h1 class="cyber-glitch-text" data-text="SYSTEM.INFO">
+                        SYSTEM.INFO
+                    </h1>
+                    <div class="terminal-text mt-3">
+                        <p><span class="text-cyber-cyan">></span> ACCESSING_USER_PROFILE...</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</header>
-<!-- Main Content-->
-<main class="mb-4">
-  <div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <p>
-         My name is Duke Thai. I am a software developer and a tech enthusiast. 
-         I love building web applications and exploring new technologies. 
-         This blog is the place where I share my thoughts, experiences, and document 
-         on various topics related to software development and technology.
-        </p>
-        <p>
-         When I'm not coding, I enjoy reading tech blogs, contributing to open-source projects, 
-         and experimenting with new programming languages and frameworks. 
-         I believe in continuous learning and growth, and I hope to inspire others 
-         through my writing.
-        </p>
-      </div>
+</div>
+
+<!-- Main Content -->
+<main class="py-5">
+    <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                
+                <!-- Profile Card -->
+                <div class="card-cyber mb-4">
+                    <div class="card-cyber-header">
+                        <h3 class="cyber-text-glow">
+                            <span class="cyber-bracket">[</span>USER_PROFILE<span class="cyber-bracket">]</span>
+                        </h3>
+                        <div class="terminal-text mt-2">
+                            <p><span class="text-cyber-pink">NAME:</span> Duke Thai</p>
+                            <p><span class="text-cyber-cyan">ROLE:</span> Software Developer | Tech Enthusiast</p>
+                            <p><span class="text-cyber-green">STATUS:</span> ONLINE</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-cyber-body">
+                        <div class="terminal-text mb-4">
+                            <p class="mb-3">
+                                <span class="text-cyber-cyan">></span> 
+                                I am a software developer and a tech enthusiast. 
+                                I love building web applications and exploring new technologies. 
+                                This blog is the place where I share my thoughts, experiences, and documentation 
+                                on various topics related to software development and technology.
+                            </p>
+                            <p>
+                                <span class="text-cyber-pink">></span> 
+                                When I'm not coding, I enjoy reading tech blogs, contributing to open-source projects, 
+                                and experimenting with new programming languages and frameworks. 
+                                I believe in continuous learning and growth, and I hope to inspire others 
+                                through my writing.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="card-cyber">
+                    <div class="card-cyber-header">
+                        <h4 class="cyber-text-glow">
+                            <span class="cyber-bracket">[</span>TECH_STACK<span class="cyber-bracket">]</span>
+                        </h4>
+                    </div>
+                    <div class="card-cyber-body">
+                        <div class="terminal-text">
+                            <p class="mb-2"><span class="text-cyber-cyan">></span> Web Development</p>
+                            <p class="mb-2"><span class="text-cyber-pink">></span> Full-Stack Engineering</p>
+                            <p class="mb-2"><span class="text-cyber-green">></span> Open Source Contribution</p>
+                            <p class="mb-2"><span class="text-cyber-cyan">></span> Continuous Learning</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
-  </div>
 </main>
 
 {% include "footer.html" %}

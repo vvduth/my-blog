@@ -1,51 +1,171 @@
 /* 
- * Enhanced Blog Styles - Modern UI with Animations
- * Built on top of Bootstrap 5 Clean Blog theme
+ * CYBERPUNK TERMINAL THEME - Retro-Futuristic Blog Styles
+ * Terminal aesthetics with neon glow and glitch effects
  */
 
-/* ===== CSS CUSTOM PROPERTIES (VARIABLES) ===== */
+/* ===== CYBERPUNK COLOR PALETTE ===== */
 :root {
-  /* Enhanced Color Palette */
-  --blog-primary: #2c3e50;
-  --blog-secondary: #3498db;
-  --blog-accent: #e74c3c;
-  --blog-text: #2c3e50;
-  --blog-text-light: #7f8c8d;
-  --blog-bg: #ffffff;
-  --blog-bg-light: #f8f9fa;
-  --blog-border: #e9ecef;
-  --blog-shadow: rgba(0, 0, 0, 0.1);
-  --blog-shadow-hover: rgba(0, 0, 0, 0.15);
+  /* Neon Colors */
+  --cyber-neon-cyan: #00ffff;
+  --cyber-neon-pink: #ff00ff;
+  --cyber-neon-green: #00ff00;
+  --cyber-neon-yellow: #ffff00;
+  --cyber-neon-blue: #0080ff;
+  --cyber-neon-purple: #8000ff;
   
-  /* Typography */
-  --blog-font-heading: 'Lora', serif;
-  --blog-font-body: 'Open Sans', sans-serif;
+  /* Dark Terminal Palette */
+  --cyber-bg-dark: #0a0a0a;
+  --cyber-bg-darker: #050505;
+  --cyber-bg-terminal: #0d1117;
+  --cyber-bg-console: #161b22;
+  
+  /* Terminal Text Colors */
+  --cyber-text-primary: #00ffff;
+  --cyber-text-secondary: #00ff00;
+  --cyber-text-muted: #4a9eff;
+  --cyber-text-white: #e6e6e6;
+  --cyber-text-dim: #6a7b8c;
+  
+  /* Glitch Effects */
+  --glitch-color-1: #00ffff;
+  --glitch-color-2: #ff00ff;
+  
+  /* Terminal Grid */
+  --grid-color: rgba(0, 255, 255, 0.1);
+  
+  /* Typography - Monospace Terminal Fonts */
+  --cyber-font-mono: 'Courier New', 'Consolas', 'Monaco', monospace;
+  --cyber-font-display: 'Share Tech Mono', 'Courier New', monospace;
   
   /* Spacing */
-  --blog-spacing-xs: 0.5rem;
-  --blog-spacing-sm: 1rem;
-  --blog-spacing-md: 1.5rem;
-  --blog-spacing-lg: 3rem;
-  --blog-spacing-xl: 4rem;
+  --cyber-spacing-xs: 0.5rem;
+  --cyber-spacing-sm: 1rem;
+  --cyber-spacing-md: 1.5rem;
+  --cyber-spacing-lg: 2.5rem;
+  --cyber-spacing-xl: 4rem;
   
   /* Transitions */
-  --blog-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --blog-transition-fast: all 0.2s ease;
-  --blog-transition-slow: all 0.5s ease;
+  --cyber-transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --cyber-transition-fast: all 0.15s ease;
+  --cyber-transition-glow: all 0.5s ease;
 }
 
-/* ===== GLOBAL ENHANCEMENTS ===== */
+/* ===== GLOBAL CYBERPUNK STYLES ===== */
+* {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
 body {
-  font-family: var(--blog-font-body);
+  font-family: var(--cyber-font-mono);
   line-height: 1.6;
-  color: var(--blog-text);
+  color: var(--cyber-text-white);
+  background: var(--cyber-bg-dark);
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* ===== ANIMATIONS & KEYFRAMES ===== */
+/* Terminal Scanlines Effect */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanlines 8s linear infinite;
+}
+
+/* Grid Background */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.3;
+}
+
+@keyframes scanlines {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(10px); }
+}
+
+/* ===== CYBERPUNK KEYFRAME ANIMATIONS ===== */
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+}
+
+@keyframes neonPulse {
+  0%, 100% { 
+    text-shadow: 0 0 5px var(--cyber-neon-cyan),
+                 0 0 10px var(--cyber-neon-cyan),
+                 0 0 20px var(--cyber-neon-cyan);
+  }
+  50% { 
+    text-shadow: 0 0 10px var(--cyber-neon-cyan),
+                 0 0 20px var(--cyber-neon-cyan),
+                 0 0 30px var(--cyber-neon-cyan),
+                 0 0 40px var(--cyber-neon-cyan);
+  }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes terminalBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -57,11 +177,25 @@ body {
   }
 }
 
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: var(--cyber-neon-cyan);
+    box-shadow: 0 0 5px var(--cyber-neon-cyan),
+                inset 0 0 5px var(--cyber-neon-cyan);
   }
+  50% {
+    border-color: var(--cyber-neon-pink);
+    box-shadow: 0 0 10px var(--cyber-neon-pink),
+                inset 0 0 10px var(--cyber-neon-pink);
+  }
+}
+
+@keyframes matrixRain {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* ===== CYBERPUNK UTILITY CLASSES ===== */
   to {
     opacity: 1;
     transform: translateX(0);

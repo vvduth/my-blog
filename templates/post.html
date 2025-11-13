@@ -1,119 +1,166 @@
 {% include "header.html" %}
 {% from 'bootstrap5/form.html' import render_form %}
-<!-- Page Header-->
-<header class="masthead" style="background-image: url('{{post.img_url}}')">
-    <div class="container position-relative px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-7">
-                <div class="post-heading">
-                    <h1>{{ post.title }}</h1>
-                    <h2 class="subheading">{{ post.subtitle }}</h2>
-                    <span class="meta"
-                    >Posted by
-            <a href="#">{{ post.author.name }}</a>
-            on {{ post.date }}
-          </span>
+
+<!-- Cyberpunk Post Hero -->
+<div class="hero-cyber hero-cyber-sm" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{{post.img_url}}') center/cover;">
+    <div class="hero-content">
+        <div class="container px-4 px-lg-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="terminal-text mb-3">
+                        <span class="text-cyber-cyan">FILE:</span> POST_{{ "%04d"|format(post.id) }}.SYS
+                    </div>
+                    <h1 class="cyber-glitch-text mb-3" data-text="{{ post.title }}">
+                        {{ post.title }}
+                    </h1>
+                    <h2 class="cyber-text-glow h4 mb-4">{{ post.subtitle }}</h2>
+                    <div class="terminal-text">
+                        <p class="mb-1">
+                            <span class="text-cyber-pink">AUTHOR:</span> 
+                            <a href="#" class="cyber-link">{{ post.author.name }}</a>
+                        </p>
+                        <p><span class="text-cyber-green">DATE:</span> {{ post.date }}</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</header>
+</div>
 
-<!-- Enhanced Post Content -->
-<article class="animate-on-scroll">
+<!-- Post Content -->
+<article class="py-5">
     <div class="container px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-7 mb-5">
-                <!-- Post Body with enhanced typography -->
-                <div class="post-content">
-                    {{ post.body|safe }}
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                
+                <!-- Post Body -->
+                <div class="card-cyber mb-4">
+                    <div class="card-cyber-body post-content-cyber">
+                        {{ post.body|safe }}
+                    </div>
                 </div>
                 
-                <!-- Post Actions -->
-                {% if current_user.id == 1 or current_user.id == 2 %}
-                <div class="post-actions d-flex justify-content-end gap-2 my-4 py-3 border-top">
-                    <a href="{{ url_for('edit_post', post_id=post.id) }}" 
-                       class="btn btn-outline-primary">
-                        <i class="fas fa-edit me-1"></i>Edit Post
+                <!-- Admin Actions -->
+                {% if current_user.id in [1, 2] %}
+                <div class="d-flex justify-content-end gap-2 mb-4">
+                    <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn-cyber btn-cyber-outline">
+                        <i class="fas fa-edit me-1"></i><span class="cyber-bracket">[</span>EDIT<span class="cyber-bracket">]</span>
                     </a>
                     <a href="{{ url_for('delete_post', post_id=post.id) }}" 
-                       class="btn btn-outline-danger delete-post-btn">
-                        <i class="fas fa-trash me-1"></i>Delete Post
+                       class="btn-cyber btn-cyber-danger"
+                       onclick="return confirm('DELETE THIS POST FROM THE SYSTEM?')">
+                        <i class="fas fa-trash me-1"></i><span class="cyber-bracket">[</span>DELETE<span class="cyber-bracket">]</span>
                     </a>
                 </div>
                 {% endif %}
                 
-                <!-- Back to Posts Link -->
-                <div class="mb-4">
-                    <a href="{{ url_for('get_all_posts') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Back to All Posts
+                <!-- Back Link -->
+                <div class="mb-5">
+                    <a href="{{ url_for('get_all_posts') }}" class="btn-cyber">
+                        <i class="fas fa-arrow-left me-2"></i><span class="cyber-bracket">[</span>RETURN_TO_FEED<span class="cyber-bracket">]</span>
                     </a>
                 </div>
 
-                <!-- Enhanced Comments Section -->
-                <div class="comments-section animate-on-scroll">
-                    <h4 class="mb-4">
-                        <i class="fas fa-comments me-2"></i>
-                        Comments ({{ comments|length }})
-                    </h4>
+                <!-- Comments Section -->
+                <div class="card-cyber">
+                    <div class="card-cyber-header">
+                        <h4 class="cyber-text-glow mb-0">
+                            <i class="fas fa-comments me-2"></i>
+                            <span class="cyber-bracket">[</span>COMMENTS: {{ comments|length }}<span class="cyber-bracket">]</span>
+                        </h4>
+                    </div>
                     
-                    {% if current_user.is_authenticated %}
-                    <!-- Comment Form -->
-                    <div class="comment-form-container mb-5 p-4 bg-light rounded">
-                        <h5 class="mb-3">Leave a Comment</h5>
-                        {{ ckeditor.load() }}
-                        {{ ckeditor.config(name="comment_text") }}
-                        {{ render_form(form, novalidate=True, render_kw={"class": "comment-form"}) }}
-                    </div>
-                    {% else %}
-                    <div class="alert alert-info text-center">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <a href="{{ url_for('login') }}" class="alert-link">Login</a> to leave a comment
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Flash Messages -->
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {% for message in messages %}
-                        <i class="fas fa-check-circle me-2"></i>{{ message }}
-                        {% endfor %}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    {% endif %}
-                    {% endwith %}
-                </div>
-                
-            </div>
-        </div>
-        
-        <!-- Enhanced Comments Display -->
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-7">
-                {% if comments %}
-                <div class="comments-list">
-                    {% for comment in comments %}
-                    <div class="comment-card animate-on-scroll">
-                        <div class="d-flex">
-                            <img class="comment-avatar me-3"
-                                 src="{{ gravatar_url(comment.author.email) }}"
-                                 alt="{{ comment.author.name }}'s avatar"
-                                 width="50" height="50">
-                            <div class="comment-content flex-grow-1">
-                                <div class="comment-author">{{ comment.author.name }}</div>
-                                <div class="comment-text">{{ comment.text|safe }}</div>
+                    <div class="card-cyber-body">
+                        {% if current_user.is_authenticated %}
+                        <!-- Comment Form -->
+                        <div class="mb-4 pb-4 border-bottom border-cyber">
+                            <div class="terminal-text mb-3">
+                                <h5><span class="text-cyber-cyan">></span> NEW_COMMENT</h5>
+                            </div>
+                            {{ ckeditor.load() }}
+                            {{ ckeditor.config(name="comment_text") }}
+                            <form method="POST" action="{{ url_for('show_post', post_id=post.id) }}" class="form-cyber">
+                                {{ form.hidden_tag() }}
+                                <div class="form-group-cyber mb-3">
+                                    {{ form.comment_text(class="form-control-cyber", style="min-height: 150px;") }}
+                                    {% if form.comment_text.errors %}
+                                        <div class="terminal-text text-cyber-pink mt-2">
+                                            {% for error in form.comment_text.errors %}
+                                                <small>ERROR: {{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {{ form.submit(class="btn-cyber") }}
+                            </form>
+                        </div>
+                        {% else %}
+                        <div class="alert-cyber alert-cyber-info mb-4">
+                            <div class="terminal-text text-center">
+                                <p class="mb-0">
+                                    <span class="text-cyber-cyan">></span> 
+                                    <a href="{{ url_for('login') }}" class="cyber-link">
+                                        <span class="cyber-bracket">[</span>LOGIN<span class="cyber-bracket">]</span>
+                                    </a> 
+                                    TO LEAVE A COMMENT
+                                </p>
                             </div>
                         </div>
+                        {% endif %}
+                        
+                        <!-- Flash Messages -->
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert-cyber alert-cyber-success mb-4">
+                            <div class="terminal-text">
+                                {% for message in messages %}
+                                <p class="mb-0">
+                                    <span class="text-cyber-green">SUCCESS:</span> {{ message }}
+                                </p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+                        
+                        <!-- Comments List -->
+                        {% if comments %}
+                        <div class="terminal-text">
+                            <h5 class="mb-4">
+                                <span class="text-cyber-pink">></span> ALL_COMMENTS
+                            </h5>
+                            {% for comment in comments %}
+                            <div class="comment-cyber mb-4">
+                                <div class="d-flex">
+                                    <img class="me-3 cyber-avatar" 
+                                         src="{{ gravatar_url(comment.author.email) }}" 
+                                         alt="{{ comment.author.name }}'s avatar" 
+                                         width="50" height="50" />
+                                    <div class="flex-grow-1">
+                                        <div class="mb-2">
+                                            <span class="text-cyber-cyan">USER:</span> 
+                                            <strong>{{ comment.author.name }}</strong>
+                                        </div>
+                                        <div class="comment-text-cyber">
+                                            {{ comment.text|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="terminal-text text-center py-4">
+                            <p class="text-muted">
+                                <i class="fas fa-comment-slash fa-2x mb-3 d-block"></i>
+                                <span class="text-cyber-pink">></span> NO_COMMENTS_FOUND
+                            </p>
+                            <p class="text-cyber-cyan">BE THE FIRST TO UPLOAD YOUR THOUGHTS</p>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endfor %}
                 </div>
-                {% else %}
-                <div class="text-center text-muted py-5">
-                    <i class="fas fa-comment-slash fa-2x mb-3"></i>
-                    <p>No comments yet. Be the first to share your thoughts!</p>
-                </div>
-                {% endif %}
+                
             </div>
         </div>
     </div>
