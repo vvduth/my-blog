@@ -6,7 +6,7 @@ from flask.cli import load_dotenv
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, Text,JSON
+from sqlalchemy import Integer, String, Text, JSON, ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 from forms import PostForm, RegisterForm, LoginForm, CommentForm
@@ -71,7 +71,7 @@ class BlogPost(db.Model):
     date: Mapped[str] = mapped_column(String(250), nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
-    tags: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
+    tags: Mapped[list] = mapped_column(ARRAY(String), nullable=True, default=list)
     # Create Foreign Key, "users.id" the users refers to the tablename of User.
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     author: Mapped[User] = relationship("User", back_populates="posts")
@@ -186,7 +186,7 @@ def filter_by_tag(tag_name):
 @app.route('/')
 def get_all_posts():
     predefined_tags = ["DevOps", "VPC", "AI-ML", "Compute", "Database", "Security", "Website"]
-    post_per_page = 4
+    post_per_page = 8
     page_index = request.args.get('page_index', 1, type=int)
     # Order by ID descending to get newest posts first
     result = db.paginate(
