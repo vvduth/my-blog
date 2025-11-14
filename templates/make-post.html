@@ -99,6 +99,23 @@
                             </div>
                             
                             <div class="form-group-cyber mb-4">
+                                <label for="{{ form.tags.id }}" class="terminal-text">
+                                    <span class="text-cyber-yellow">TAGS:</span>
+                                </label>
+                                {{ form.tags(class="form-control-cyber", placeholder="e.g., cloud, python, ai (comma-separated)") }}
+                                <small class="terminal-text text-muted mt-1 d-block">
+                                    <span class="text-cyber-cyan">></span> Enter tags separated by commas for filtering
+                                </small>
+                                {% if form.tags.errors %}
+                                    <div class="terminal-text text-cyber-pink mt-2">
+                                        {% for error in form.tags.errors %}
+                                            <small>ERROR: {{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group-cyber mb-4">
                                 <label for="{{ form.body.id }}" class="terminal-text">
                                     <span class="text-cyber-cyan">CONTENT:</span>
                                 </label>

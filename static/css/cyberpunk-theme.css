@@ -456,6 +456,55 @@ body::after {
   box-shadow: 0 0 20px var(--cyber-neon-pink);
 }
 
+/* Button Size Variants */
+.btn-cyber-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.btn-cyber-lg {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+}
+
+/* Button Active State */
+.btn-cyber-active {
+  background: var(--cyber-neon-cyan);
+  color: var(--cyber-bg-dark);
+  box-shadow: 0 0 20px var(--cyber-neon-cyan), inset 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.btn-cyber-active::before {
+  left: 0;
+}
+
+/* Gap Utility for Flexbox */
+.gap-2 {
+  gap: 0.5rem;
+}
+
+/* Form Control Cyber */
+.form-control-cyber {
+  background: var(--cyber-bg-console);
+  border: 2px solid var(--cyber-neon-cyan);
+  color: var(--cyber-text-white);
+  font-family: var(--cyber-font-mono);
+  padding: 0.75rem;
+  border-radius: 4px;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.form-control-cyber:focus {
+  background: var(--cyber-bg-terminal);
+  border-color: var(--cyber-neon-pink);
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+  outline: none;
+  color: var(--cyber-text-white);
+}
+
 /* ===== CYBERPUNK FORMS ===== */
 .form-cyber .form-control {
   background: var(--cyber-bg-console);

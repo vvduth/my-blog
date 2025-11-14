@@ -6,7 +6,7 @@ from flask.cli import load_dotenv
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, Text
+from sqlalchemy import Integer, String, Text,JSON
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 from forms import PostForm, RegisterForm, LoginForm, CommentForm
@@ -71,10 +71,12 @@ class BlogPost(db.Model):
     date: Mapped[str] = mapped_column(String(250), nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
+    tags: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
     # Create Foreign Key, "users.id" the users refers to the tablename of User.
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     author: Mapped[User] = relationship("User", back_populates="posts")
     comments = relationship("Comment", back_populates="post")
+    
 
 class Comment(db.Model):
     __tablename__ = "comments"
@@ -158,9 +160,32 @@ def logout():
     return redirect(url_for('get_all_posts'))
 
 
+@app.route('/tag/<tag_name>')
+def filter_by_tag(tag_name):
+    predefined_tags = ["DevOps", "VPC", "AI/ML", "Compute", "Database", "Security", "Website"]
+    post_per_page = 4
+    page_index = request.args.get('page_index', 1, type=int)
+    # Filter posts that contain the specified tag
+    # Get all posts and filter in Python for JSON compatibility
+    all_posts_query = db.select(BlogPost).order_by(BlogPost.id.desc())
+    all_posts = db.session.execute(all_posts_query).scalars().all()
+    
+    # Filter posts that have the tag
+    filtered_posts = [post for post in all_posts if post.tags and tag_name in post.tags]
+    
+    # Manual pagination
+    total_posts = len(filtered_posts)
+    total_pages = (total_posts + post_per_page - 1) // post_per_page  # Ceiling division
+    start_idx = (page_index - 1) * post_per_page
+    end_idx = start_idx + post_per_page
+    posts = filtered_posts[start_idx:end_idx]
+    
+    return render_template("index.html", all_posts=posts, page_index=page_index, total_pages=total_pages, filtered_tag=tag_name, predefined_tags=predefined_tags)
+
 
 @app.route('/')
 def get_all_posts():
+    predefined_tags = ["DevOps", "VPC", "AI-ML", "Compute", "Database", "Security", "Website"]
     post_per_page = 4
     page_index = request.args.get('page_index', 1, type=int)
     # Order by ID descending to get newest posts first
@@ -170,7 +195,7 @@ def get_all_posts():
         per_page=post_per_page
     )
     posts = result.items or []
-    return render_template("index.html", all_posts=posts, page_index=page_index, total_pages=result.pages)
+    return render_template("index.html", all_posts=posts, page_index=page_index, total_pages=result.pages, predefined_tags=predefined_tags)
 
 
 
@@ -202,13 +227,18 @@ def show_post(post_id):
 def add_new_post():
     form = PostForm()
     if form.validate_on_submit():
+        # Process tags: split by comma and strip whitespace
+        tags_input = form.tags.data or ""
+        tags_list = [tag.strip() for tag in tags_input.split(',') if tag.strip()]
+        
         new_post = BlogPost(
             title=form.title.data,
             subtitle=form.subtitle.data,
             img_url=form.img_url.data,
             date=date.today().strftime("%B %d, %Y"),
             body=form.body.data,
-            author=current_user
+            author=current_user,
+            tags=tags_list
         )
         db.session.add(new_post)
         db.session.commit()
@@ -220,18 +250,27 @@ def add_new_post():
 @is_admin
 def edit_post(post_id):
     post_to_update = db.get_or_404(BlogPost, post_id)
+    # Pre-populate tags field with comma-separated values
+    existing_tags = ', '.join(post_to_update.tags) if post_to_update.tags else ''
+    
     form = PostForm(
         title=post_to_update.title,
         subtitle=post_to_update.subtitle,
         author=post_to_update.author,
         img_url=post_to_update.img_url,
-        body=post_to_update.body
+        body=post_to_update.body,
+        tags=existing_tags
     )
     if form.validate_on_submit():
+        # Process tags: split by comma and strip whitespace
+        tags_input = form.tags.data or ""
+        tags_list = [tag.strip() for tag in tags_input.split(',') if tag.strip()]
+        
         post_to_update.title = form.title.data
         post_to_update.subtitle = form.subtitle.data
         post_to_update.img_url = form.img_url.data
         post_to_update.body = form.body.data
+        post_to_update.tags = tags_list
         db.session.commit()
         return redirect(url_for('show_post', post_id=post_id))
     return render_template("make-post.html", post_id=post_id, form=form)

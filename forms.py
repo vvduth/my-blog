@@ -12,6 +12,7 @@ class PostForm(FlaskForm):
     #author = StringField("Post Author", validators=[DataRequired()])
     img_url = StringField("Image URL", validators=[DataRequired(), URL()])
     body = CKEditorField("Post Content", validators=[DataRequired()])
+    tags = StringField("Tags (comma-separated)", validators=[])
     submit = SubmitField("Submit Post")
 
 # TODO: Create a RegisterForm to register new users
