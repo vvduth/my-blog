@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.fields.simple import PasswordField
 from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditorField
+
 
 # POST FORM
 # MAKE form
@@ -11,7 +12,7 @@ class PostForm(FlaskForm):
     subtitle = StringField("Post Subtitle", validators=[DataRequired()])
     #author = StringField("Post Author", validators=[DataRequired()])
     img_url = StringField("Image URL", validators=[DataRequired(), URL()])
-    body = CKEditorField("Post Content", validators=[DataRequired()])
+    body = TextAreaField("Post Content", validators=[DataRequired()])
     tags = StringField("Tags (comma-separated)", validators=[])
     submit = SubmitField("Submit Post")
 

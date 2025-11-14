@@ -50,12 +50,12 @@
                     </div>
                     
                     <div class="card-cyber-body">
-                        {{ ckeditor.load() }}
-                        {{ ckeditor.config(name="body") }}
+
                         
-                        <form method="POST" class="form-cyber">
+                       <!-- ⚡ CRITICAL: novalidate prevents HTML5 validation on hidden textarea -->
+                        <form method="POST" class="form-cyber" novalidate id="postForm">
                             {{ form.hidden_tag() }}
-                            
+
                             <div class="form-group-cyber mb-4">
                                 <label for="{{ form.title.id }}" class="terminal-text">
                                     <span class="text-cyber-cyan">TITLE:</span>
@@ -69,10 +69,10 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            
+
                             <div class="form-group-cyber mb-4">
                                 <label for="{{ form.subtitle.id }}" class="terminal-text">
-                                    <span class="text-cyber-pink">SUBTITLE:</span>
+                                    <span class="text-cyber-cyan">SUBTITLE:</span>
                                 </label>
                                 {{ form.subtitle(class="form-control-cyber", placeholder="Enter post subtitle...") }}
                                 {% if form.subtitle.errors %}
@@ -83,10 +83,10 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            
+
                             <div class="form-group-cyber mb-4">
                                 <label for="{{ form.img_url.id }}" class="terminal-text">
-                                    <span class="text-cyber-green">IMAGE_URL:</span>
+                                    <span class="text-cyber-pink">IMAGE_URL:</span>
                                 </label>
                                 {{ form.img_url(class="form-control-cyber", placeholder="https://example.com/image.jpg") }}
                                 {% if form.img_url.errors %}
@@ -97,15 +97,12 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            
+
                             <div class="form-group-cyber mb-4">
                                 <label for="{{ form.tags.id }}" class="terminal-text">
                                     <span class="text-cyber-yellow">TAGS:</span>
                                 </label>
                                 {{ form.tags(class="form-control-cyber", placeholder="e.g., cloud, python, ai (comma-separated)") }}
-                                <small class="terminal-text text-muted mt-1 d-block">
-                                    <span class="text-cyber-cyan">></span> Enter tags separated by commas for filtering
-                                </small>
                                 {% if form.tags.errors %}
                                     <div class="terminal-text text-cyber-pink mt-2">
                                         {% for error in form.tags.errors %}
@@ -114,12 +111,15 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            
+
                             <div class="form-group-cyber mb-4">
                                 <label for="{{ form.body.id }}" class="terminal-text">
                                     <span class="text-cyber-cyan">CONTENT:</span>
                                 </label>
-                                {{ form.body(class="form-control-cyber") }}
+                                {{ form.body(class="form-control-cyber", id="body") }}
+                                <div id="bodyError" class="terminal-text text-cyber-pink mt-2" style="display: none;">
+                                    <small>ERROR: Post content is required</small>
+                                </div>
                                 {% if form.body.errors %}
                                     <div class="terminal-text text-cyber-pink mt-2">
                                         {% for error in form.body.errors %}
@@ -128,9 +128,9 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            
+
                             <div class="text-center">
-                                {{ form.submit(class="btn-cyber btn-cyber-lg") }}
+                                {{ form.submit(class="btn-cyber btn-cyber-lg", id="submitBtn") }}
                             </div>
                         </form>
                     </div>
@@ -140,5 +140,6 @@
     </div>
 </main>
 
+{% include "ckEditor5.html" %}
 {% include "footer.html" %} 
 {% endblock %}

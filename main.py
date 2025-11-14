@@ -162,8 +162,8 @@ def logout():
 
 @app.route('/tag/<tag_name>')
 def filter_by_tag(tag_name):
-    predefined_tags = ["DevOps", "VPC", "AI/ML", "Compute", "Database", "Security", "Website"]
-    post_per_page = 4
+    predefined_tags = ["DevOps", "VPC", "AI/ML", "Compute", "Database", "Security", "Website", "Kubernetes", "Docker"]
+    post_per_page = 8
     page_index = request.args.get('page_index', 1, type=int)
     # Filter posts that contain the specified tag
     # Get all posts and filter in Python for JSON compatibility
@@ -185,7 +185,7 @@ def filter_by_tag(tag_name):
 
 @app.route('/')
 def get_all_posts():
-    predefined_tags = ["DevOps", "VPC", "AI-ML", "Compute", "Database", "Security", "Website"]
+    predefined_tags = ["DevOps", "VPC", "AI-ML", "Compute", "Database", "Security", "Website", "Kubernetes", "Docker"]
     post_per_page = 8
     page_index = request.args.get('page_index', 1, type=int)
     # Order by ID descending to get newest posts first

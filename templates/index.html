@@ -105,12 +105,16 @@
                 
                 <div class="card-cyber-body">
                     <div class="terminal-text small">
+                        <p class="mb-1">
+                            <span class="text-cyber-green">DATE:</span> {{ post.date }}
+                        </p>
 <!--                        <p class="mb-1">-->
 <!--                            <span class="text-cyber-pink">AUTHOR:</span> {{ post.author.name }}-->
 <!--                        </p>-->
 <!--                        <p class="mb-1">-->
 <!--                            <span class="text-cyber-green">DATE:</span> {{ post.date }}-->
-<!--                        </p>-->
+<!--                        </p>
+
                         {% if post.tags %}
                         <p class="mb-2">
                             <span class="text-cyber-cyan">TOPICS:</span>
