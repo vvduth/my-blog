@@ -289,6 +289,30 @@ def about():
     return render_template("about.html")
 
 
+# 🧪 TEST ROUTE: Remove after testing error handlers
+@app.route('/test-500')
+def test_500_error():
+    """Deliberately trigger a 500 error for testing"""
+    # Method 1: Direct abort
+    abort(500)
+
+    # OR Method 2: Raise an exception
+    # raise Exception("This is a test error!")
+
+    # OR Method 3: Database error
+    # db.session.execute(db.text("SELECT * FROM non_existent_table"))
+
+@app.route('/test-404')
+def test_404_error():
+    """Deliberately trigger a 404 error"""
+    abort(404)
+
+# 🧪 TEST ROUTE: Test 403 error
+@app.route('/test-403')
+def test_403_error():
+    """Deliberately trigger a 403 error"""
+    abort(403)
+
 @app.route("/contact",  methods=["GET", "POST"])
 def contact():
     if request.method == "POST":

@@ -1,25 +1,181 @@
-{% extends "header.html" %}
+{% include "header.html" %}
 
-{% block content %}
-<div class="container px-4 px-lg-5 py-5">
+<div class="container px-4 px-lg-5 py-5" style="min-height: 70vh;">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card-cyber text-center py-5">
+            <div class="card-cyber text-center py-5" style="margin-top: 3rem;">
                 <div class="terminal-text">
-                    <h1 class="cyber-glitch-text mb-4" data-text="500">500</h1>
-                    <p class="mb-3"><span class="text-cyber-pink">ERROR:</span> SYSTEM_MALFUNCTION</p>
-                    <p class="mb-4">
-                        <span class="text-cyber-cyan">></span> An internal error occurred. Our neural network is being rebooted.
-                        Just reload the site, it will work again. I am on hobbyist-tier, classic cold start problems. I am currently working on a way to work around it.
-                    </p>
-                    <a href="{{ url_for('get_all_posts') }}" class="btn-cyber">
-                        <span class="cyber-bracket">[</span>RETURN_TO_MAINFRAME<span class="cyber-bracket">]</span>
-                    </a>
+                    <!-- Glitch effect title -->
+                    <h1 class="cyber-glitch-text mb-4" data-text="500" style="font-size: 8rem; font-weight: bold; color: var(--cyber-neon-pink); text-shadow: 0 0 20px rgba(255, 0, 110, 0.8);">
+                        500
+                    </h1>
+                    
+                    <!-- Error message with typing effect -->
+                    <div class="mb-4">
+                        <p class="mb-2" style="font-size: 1.5rem; color: var(--cyber-neon-pink); font-family: 'Courier New', monospace;">
+                            <span class="text-cyber-pink">⚠ ERROR:</span> SYSTEM_MALFUNCTION
+                        </p>
+                        <div class="typing-container" style="margin: 2rem auto; max-width: 600px;">
+                            <p class="typing-text" style="color: var(--cyber-neon-cyan); font-family: 'Courier New', monospace; font-size: 1.1rem; line-height: 1.8;">
+                                <span class="text-cyber-cyan">&gt;</span> Just reload the site, it will work again...<br>
+                                <span class="text-cyber-cyan">&gt;</span> I am on free-tier everything, so I got cold-start problem...<br>
+                                <span class="text-cyber-cyan">&gt;</span> I am currently working on a way to get around it...
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Action buttons -->
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="{{ url_for('get_all_posts') }}" class="btn-cyber">
+                            <span class="cyber-bracket">[</span>RETURN_TO_MAINFRAME<span class="cyber-bracket">]</span>
+                        </a>
+                        <button onclick="window.location.reload()" class="btn-cyber" style="background: linear-gradient(135deg, var(--cyber-neon-cyan), var(--cyber-neon-blue));">
+                            <span class="cyber-bracket">[</span>RETRY_CONNECTION<span class="cyber-bracket">]</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Error code (for debugging) -->
+                    <div class="mt-5 pt-4" style="border-top: 1px solid rgba(0, 255, 255, 0.2);">
+                        <p class="text-muted" style="font-family: 'Courier New', monospace; font-size: 0.85rem;">
+                            ERROR_CODE: {{ request.url }}<br>
+                            TIMESTAMP: <span id="error-timestamp"></span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Matrix rain background effect -->
+<canvas id="matrix-rain-error" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.1; pointer-events: none;"></canvas>
+
+<style>
+/* Glitch animation for error code */
+@keyframes glitch {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+}
+
+.cyber-glitch-text {
+    position: relative;
+    animation: glitch 1s infinite;
+}
+
+.cyber-glitch-text::before,
+.cyber-glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.cyber-glitch-text::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--cyber-neon-cyan);
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim-2 2s infinite linear alternate-reverse;
+}
+
+.cyber-glitch-text::after {
+    left: -2px;
+    text-shadow: -2px 0 var(--cyber-neon-pink);
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% { clip: rect(61px, 9999px, 90px, 0); }
+    20% { clip: rect(33px, 9999px, 91px, 0); }
+    40% { clip: rect(17px, 9999px, 82px, 0); }
+    60% { clip: rect(55px, 9999px, 66px, 0); }
+    80% { clip: rect(29px, 9999px, 53px, 0); }
+    100% { clip: rect(43px, 9999px, 75px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+    0% { clip: rect(76px, 9999px, 44px, 0); }
+    20% { clip: rect(19px, 9999px, 99px, 0); }
+    40% { clip: rect(52px, 9999px, 15px, 0); }
+    60% { clip: rect(38px, 9999px, 87px, 0); }
+    80% { clip: rect(69px, 9999px, 27px, 0); }
+    100% { clip: rect(11px, 9999px, 64px, 0); }
+}
+
+/* Typing effect */
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink {
+    50% { border-color: transparent; }
+}
+
+.typing-text {
+    overflow: hidden;
+    border-right: 2px solid var(--cyber-neon-cyan);
+    white-space: nowrap;
+    animation: typing 3s steps(40, end), blink 0.75s step-end infinite;
+}
+
+/* Pulse animation for buttons */
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 110, 0.5); }
+    50% { box-shadow: 0 0 40px rgba(255, 0, 110, 0.8), 0 0 60px rgba(255, 0, 110, 0.4); }
+}
+
+.btn-cyber {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+</style>
+
+<script>
+// Display current timestamp
+document.getElementById('error-timestamp').textContent = new Date().toLocaleString();
+
+// Matrix rain effect for error page
+const canvas = document.getElementById('matrix-rain-error');
+if (canvas) {
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const matrix = '01';
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#0F0';
+        ctx.font = `${fontSize}px monospace`;
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = matrix[Math.floor(Math.random() * matrix.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+    }
+
+    setInterval(drawMatrix, 50);
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+}
+</script>
+
 {% include "footer.html" %}
-{% endblock %}

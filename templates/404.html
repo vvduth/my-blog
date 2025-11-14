@@ -1,15 +1,17 @@
-{% extends "header.html" %}
+{% include "header.html" %}
 
-{% block content %}
-<div class="container px-4 px-lg-5 py-5">
+<div class="container px-4 px-lg-5 py-5" style="min-height: 70vh;">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card-cyber text-center py-5">
+            <div class="card-cyber text-center py-5" style="margin-top: 3rem;">
                 <div class="terminal-text">
-                    <h1 class="cyber-glitch-text mb-4" data-text="404">404</h1>
-                    <p class="mb-3"><span class="text-cyber-pink">ERROR:</span> FILE_NOT_FOUND</p>
-                    <p class="mb-4">
-                        <span class="text-cyber-cyan">></span> The requested data does not exist in the system.
+                    <h1 class="cyber-glitch-text mb-4" data-text="404" style="font-size: 8rem; font-weight: bold; color: var(--cyber-neon-cyan); text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);">
+                        404
+                    </h1>
+                    <p class="mb-3" style="font-size: 1.5rem;"><span class="text-cyber-pink">⚠ ERROR:</span> FILE_NOT_FOUND</p>
+                    <p class="mb-4" style="color: var(--cyber-neon-cyan); font-family: 'Courier New', monospace;">
+                        <span class="text-cyber-cyan">&gt;</span> The requested data does not exist in the system.<br>
+                        <span class="text-cyber-cyan">&gt;</span> Perhaps it was deleted or never existed.
                     </p>
                     <a href="{{ url_for('get_all_posts') }}" class="btn-cyber">
                         <span class="cyber-bracket">[</span>BACK_TO_GRID<span class="cyber-bracket">]</span>
@@ -20,5 +22,19 @@
     </div>
 </div>
 
+<style>
+@keyframes glitch {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+}
+
+.cyber-glitch-text {
+    position: relative;
+    animation: glitch 1s infinite;
+}
+</style>
+
 {% include "footer.html" %}
-{% endblock %}
