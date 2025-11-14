@@ -1,0 +1,25 @@
+{% extends "header.html" %}
+
+{% block content %}
+<div class="container px-4 px-lg-5 py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card-cyber text-center py-5">
+                <div class="terminal-text">
+                    <h1 class="cyber-glitch-text mb-4" data-text="500">500</h1>
+                    <p class="mb-3"><span class="text-cyber-pink">ERROR:</span> SYSTEM_MALFUNCTION</p>
+                    <p class="mb-4">
+                        <span class="text-cyber-cyan">></span> An internal error occurred. Our neural network is being rebooted.
+                        Just reload the site, it will work again. I am on hobbyist-tier, classic cold start problems. I am currently working on a way to work around it.
+                    </p>
+                    <a href="{{ url_for('get_all_posts') }}" class="btn-cyber">
+                        <span class="cyber-bracket">[</span>RETURN_TO_MAINFRAME<span class="cyber-bracket">]</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+{% endblock %}

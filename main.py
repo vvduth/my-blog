@@ -335,5 +335,24 @@ def receive_data():
           f"</h3>")
 
 
+# ✅ FIX: Add error handlers
+@app.errorhandler(500)
+def internal_error(error):
+    """Handle 500 errors gracefully"""
+    db.session.rollback()  # Rollback any failed transactions
+    app.logger.error(f"Internal Server Error: {error}")
+    return render_template('500.html'), 500
+
+@app.errorhandler(404)
+def not_found_error(error):
+    """Handle 404 errors"""
+    return render_template('404.html'), 404
+
+@app.errorhandler(403)
+def forbidden_error(error):
+    """Handle 403 errors"""
+    return render_template('403.html'), 403
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=False, port=5003)
