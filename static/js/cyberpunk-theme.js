@@ -1,294 +1,479 @@
-/**
- * CYBERPUNK TERMINAL THEME - Interactive Effects
- * Glitch effects, terminal animations, and neon interactions
- */
+// ================================================
+// CYBERPUNK TERMINAL THEME - JavaScript Effects
+// Version: 2.0
+// ================================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // ===== TERMINAL BOOT SEQUENCE =====
-    function initTerminalBoot() {
-        console.log('%c> SYSTEM INITIALIZING...', 'color: #00ffff; font-family: monospace;');
-        console.log('%c> LOADING CYBERPUNK INTERFACE...', 'color: #00ff00; font-family: monospace;');
-        console.log('%c> NEURAL LINK ESTABLISHED', 'color: #ff00ff; font-family: monospace;');
-    }
-    
-    // ===== SCROLL REVEAL ANIMATIONS =====
-    function initScrollReveal() {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
+(function() {
+    'use strict';
+
+    // ========================================
+    // MATRIX RAIN EFFECT
+    // ========================================
+    function initMatrixRain() {
+        const canvas = document.getElementById('matrix-rain');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
         
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+        // Set canvas size
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+
+        // Matrix characters
+        const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~`';
+        const characters = matrixChars.split('');
+
+        // Column properties
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        // Initialize drops
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -100;
+        }
+
+        // Drawing function
+        function draw() {
+            // Fade effect
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Set text properties
+            ctx.fillStyle = '#00ff00'; // Cyberpunk green
+            ctx.font = fontSize + 'px monospace';
+
+            // Draw characters
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters[Math.floor(Math.random() * characters.length)];
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+
+                ctx.fillText(text, x, y);
+
+                // Reset drop to top randomly
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
                 }
-            });
-        }, observerOptions);
-        
-        document.querySelectorAll('.animate-on-scroll').forEach(el => {
-            observer.observe(el);
+
+                drops[i]++;
+            }
+        }
+
+        // Animation loop
+        const matrixInterval = setInterval(draw, 50);
+
+        // Resize handler
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            clearInterval(matrixInterval);
         });
     }
-    
-    // ===== GLITCH EFFECT ON HOVER =====
+
+    // ========================================
+    // GLITCH TEXT EFFECT ON HOVER
+    // ========================================
     function initGlitchEffects() {
         const glitchElements = document.querySelectorAll('.glitch-on-hover');
         
         glitchElements.forEach(element => {
+            let glitchInterval;
+            
             element.addEventListener('mouseenter', function() {
-                this.classList.add('cyber-text-glitch');
-                setTimeout(() => {
-                    this.classList.remove('cyber-text-glitch');
-                }, 500);
+                glitchInterval = setInterval(() => {
+                    this.style.transform = `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)`;
+                }, 50);
+            });
+
+            element.addEventListener('mouseleave', function() {
+                clearInterval(glitchInterval);
+                this.style.transform = 'translate(0, 0)';
             });
         });
     }
-    
-    // ===== NEON GLOW ON SCROLL =====
-    function initNeonGlowOnScroll() {
-        const navbar = document.querySelector('.navbar-cyber');
+
+    // ========================================
+    // NEON GLOW ANIMATION ON SCROLL
+    // ========================================
+    function initScrollGlowEffects() {
+        const glowElements = document.querySelectorAll('.cyber-text-glow');
         
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
-                navbar.style.boxShadow = '0 0 30px rgba(0, 255, 255, 0.8)';
-            } else {
-                navbar.style.boxShadow = '0 0 20px rgba(0, 255, 255, 0.5)';
-            }
-        });
-    }
-    
-    // ===== TERMINAL TYPING EFFECT =====
-    function typeWriter(element, text, speed = 50) {
-        let i = 0;
-        element.textContent = '';
-        
-        function type() {
-            if (i < text.length) {
-                element.textContent += text.charAt(i);
-                i++;
-                setTimeout(type, speed);
-            }
-        }
-        
-        type();
-    }
-    
-    // Apply typing effect to elements with class 'terminal-type'
-    function initTypingEffects() {
-        const typingElements = document.querySelectorAll('.terminal-type');
-        
-        typingElements.forEach((element, index) => {
-            const text = element.textContent;
-            setTimeout(() => {
-                typeWriter(element, text, 50);
-            }, index * 1000);
-        });
-    }
-    
-    // ===== RANDOM GLITCH ANIMATION =====
-    function randomGlitch() {
-        const glitchableElements = document.querySelectorAll('.hero-title-cyber, .navbar-brand-cyber');
-        
-        setInterval(() => {
-            const randomElement = glitchableElements[Math.floor(Math.random() * glitchableElements.length)];
-            if (randomElement) {
-                randomElement.style.animation = 'glitch 0.3s';
-                setTimeout(() => {
-                    randomElement.style.animation = '';
-                }, 300);
-            }
-        }, 5000);
-    }
-    
-    // ===== MATRIX RAIN EFFECT (BACKGROUND) =====
-    function createMatrixRain() {
-        const canvas = document.createElement('canvas');
-        canvas.id = 'matrix-canvas';
-        canvas.style.position = 'fixed';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.zIndex = '0';
-        canvas.style.pointerEvents = 'none';
-        canvas.style.opacity = '0.1';
-        
-        document.body.appendChild(canvas);
-        
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        const matrix = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-        
-        for (let i = 0; i < columns; i++) {
-            drops[i] = 1;
-        }
-        
-        function draw() {
-            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = '#00ffff';
-            ctx.font = fontSize + 'px monospace';
-            
-            for (let i = 0; i < drops.length; i++) {
-                const text = matrix[Math.floor(Math.random() * matrix.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'neon-glow 2s ease-in-out infinite alternate';
                 }
-                drops[i]++;
-            }
-        }
-        
-        setInterval(draw, 35);
-        
-        window.addEventListener('resize', function() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            });
+        }, observerOptions);
+
+        glowElements.forEach(element => {
+            observer.observe(element);
         });
     }
-    
-    // ===== CYBERPUNK BUTTON EFFECTS =====
-    function initButtonEffects() {
-        const cyberButtons = document.querySelectorAll('.btn-cyber');
+
+    // ========================================
+    // BUTTON RIPPLE EFFECT
+    // ========================================
+    function initButtonRipple() {
+        const buttons = document.querySelectorAll('.btn-cyber');
         
-        cyberButtons.forEach(button => {
-            button.addEventListener('mouseenter', function() {
-                this.style.textShadow = '0 0 10px currentColor';
-            });
-            
-            button.addEventListener('mouseleave', function() {
-                this.style.textShadow = 'none';
-            });
-            
+        buttons.forEach(button => {
             button.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
                 const ripple = document.createElement('span');
                 ripple.style.position = 'absolute';
-                ripple.style.width = '20px';
-                ripple.style.height = '20px';
+                ripple.style.width = '0';
+                ripple.style.height = '0';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
                 ripple.style.background = 'rgba(0, 255, 255, 0.5)';
                 ripple.style.borderRadius = '50%';
-                ripple.style.transform = 'scale(0)';
-                ripple.style.animation = 'ripple-cyber 0.6s ease-out';
+                ripple.style.transform = 'translate(-50%, -50%)';
                 ripple.style.pointerEvents = 'none';
-                
-                const rect = this.getBoundingClientRect();
-                ripple.style.left = (e.clientX - rect.left - 10) + 'px';
-                ripple.style.top = (e.clientY - rect.top - 10) + 'px';
-                
-                this.style.position = 'relative';
+                ripple.style.transition = 'width 0.6s, height 0.6s, opacity 0.6s';
+                ripple.style.opacity = '1';
+
                 this.appendChild(ripple);
-                
-                setTimeout(() => ripple.remove(), 600);
+
+                setTimeout(() => {
+                    ripple.style.width = '300px';
+                    ripple.style.height = '300px';
+                    ripple.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
             });
         });
     }
-    
-    // Add ripple animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ripple-cyber {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // ===== FORM INPUT EFFECTS =====
-    function initFormEffects() {
-        const formInputs = document.querySelectorAll('.form-cyber .form-control');
-        
-        formInputs.forEach(input => {
-            input.addEventListener('focus', function() {
-                this.style.animation = 'borderGlow 1.5s infinite';
-            });
-            
-            input.addEventListener('blur', function() {
-                this.style.animation = '';
-            });
-        });
-    }
-    
-    // ===== CARD HOVER SOUND (OPTIONAL) =====
-    function initCardEffects() {
+
+    // ========================================
+    // CARD HOVER 3D EFFECT
+    // ========================================
+    function initCard3DEffect() {
         const cards = document.querySelectorAll('.card-cyber');
         
         cards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                // Optional: Play hover sound
-                // const audio = new Audio('/static/sounds/cyber-hover.mp3');
-                // audio.volume = 0.1;
-                // audio.play();
+            // Skip cards that contain the post editor form
+            if (card.querySelector('#postForm')) {
+                return;
+            }
+            
+            card.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
             });
         });
     }
-    
-    // ===== TERMINAL PROMPT ANIMATION =====
-    function initTerminalPrompts() {
-        const prompts = document.querySelectorAll('.terminal-prompt');
+
+    // ========================================
+    // TYPING EFFECT FOR TERMINAL TEXT
+    // ========================================
+    function initTypingEffect() {
+        const typingElements = document.querySelectorAll('.typing-effect');
         
-        prompts.forEach(prompt => {
-            const cursor = document.createElement('span');
-            cursor.textContent = '▮';
-            cursor.style.animation = 'terminalBlink 1s infinite';
-            cursor.style.color = 'var(--cyber-neon-green)';
-            cursor.style.marginLeft = '5px';
-            prompt.appendChild(cursor);
+        typingElements.forEach((element, index) => {
+            const text = element.textContent;
+            element.textContent = '';
+            element.style.display = 'inline-block';
+            
+            let i = 0;
+            const typingSpeed = 50;
+            const startDelay = index * 1000; // Stagger multiple typing effects
+
+            setTimeout(() => {
+                const typeInterval = setInterval(() => {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(typeInterval);
+                        // Remove blinking cursor after typing completes
+                        setTimeout(() => {
+                            element.style.borderRight = 'none';
+                        }, 500);
+                    }
+                }, typingSpeed);
+            }, startDelay);
         });
     }
-    
-    // ===== INITIALIZE ALL EFFECTS =====
-    function initCyberpunkTheme() {
-        initTerminalBoot();
-        initScrollReveal();
-        initGlitchEffects();
-        initNeonGlowOnScroll();
-        // initTypingEffects(); // Uncomment if you want typing effects
-        randomGlitch();
-        createMatrixRain();
-        initButtonEffects();
-        initFormEffects();
-        initCardEffects();
-        // initTerminalPrompts(); // Uncomment if you want terminal cursors
-        
-        console.log('%c>> CYBERPUNK INTERFACE LOADED', 'color: #ff00ff; font-size: 16px; font-family: monospace; text-shadow: 0 0 10px #ff00ff;');
+
+    // ========================================
+    // SMOOTH SCROLL TO TOP
+    // ========================================
+    function initScrollToTop() {
+        // Create scroll-to-top button
+        const scrollBtn = document.createElement('button');
+        scrollBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+        scrollBtn.className = 'scroll-to-top-cyber';
+        scrollBtn.style.cssText = `
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            color: var(--cyber-cyan);
+            border: 2px solid var(--cyber-cyan);
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        `;
+
+        document.body.appendChild(scrollBtn);
+
+        // Show/hide button on scroll
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollBtn.style.display = 'flex';
+            } else {
+                scrollBtn.style.display = 'none';
+            }
+        });
+
+        // Scroll to top on click
+        scrollBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Hover effect
+        scrollBtn.addEventListener('mouseenter', function() {
+            this.style.background = 'var(--cyber-cyan)';
+            this.style.color = 'var(--cyber-bg)';
+            this.style.boxShadow = '0 0 20px rgba(0, 255, 255, 0.8)';
+            this.style.transform = 'translateY(-5px)';
+        });
+
+        scrollBtn.addEventListener('mouseleave', function() {
+            this.style.background = 'transparent';
+            this.style.color = 'var(--cyber-cyan)';
+            this.style.boxShadow = 'none';
+            this.style.transform = 'translateY(0)';
+        });
     }
-    
-    // Start the cyberpunk experience
-    initCyberpunkTheme();
-});
 
-// ===== UTILITY FUNCTIONS =====
+    // ========================================
+    // NAVBAR SCROLL EFFECT
+    // ========================================
+    function initNavbarScrollEffect() {
+        const navbar = document.querySelector('.navbar-cyber');
+        if (!navbar) return;
 
-// Debounce function
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
+        let lastScroll = 0;
 
-// Smooth scroll to top
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+        window.addEventListener('scroll', function() {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                navbar.style.background = 'rgba(13, 17, 23, 0.98)';
+                navbar.style.boxShadow = '0 0 30px rgba(0, 255, 255, 0.5)';
+            } else {
+                navbar.style.background = 'rgba(13, 17, 23, 0.95)';
+                navbar.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.3)';
+            }
+
+            lastScroll = currentScroll;
+        });
+    }
+
+    // ========================================
+    // FORM VALIDATION ENHANCEMENT
+    // ========================================
+    function initFormValidation() {
+        const forms = document.querySelectorAll('.form-cyber');
+        
+        forms.forEach(form => {
+            const inputs = form.querySelectorAll('.form-control-cyber');
+            
+            inputs.forEach(input => {
+                // Add focus glow effect
+                input.addEventListener('focus', function() {
+                    this.style.boxShadow = '0 0 15px rgba(255, 0, 255, 0.5)';
+                });
+
+                input.addEventListener('blur', function() {
+                    if (this.value === '') {
+                        this.style.boxShadow = 'none';
+                    } else {
+                        this.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.3)';
+                    }
+                });
+
+                // Real-time validation feedback
+                input.addEventListener('input', function() {
+                    if (this.checkValidity()) {
+                        this.style.borderColor = 'var(--cyber-green)';
+                    } else {
+                        this.style.borderColor = 'var(--cyber-pink)';
+                    }
+                });
+            });
+        });
+    }
+
+    // ========================================
+    // LOADING ANIMATION
+    // ========================================
+    function initLoadingAnimation() {
+        // Create loading overlay
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.id = 'cyber-loading';
+        loadingOverlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--cyber-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease;
+        `;
+
+        loadingOverlay.innerHTML = `
+            <div class="cyber-glitch-text" data-text="LOADING..." style="font-size: 2rem; color: var(--cyber-cyan);">
+                LOADING...
+            </div>
+            <div class="terminal-text mt-3" style="color: var(--cyber-green);">
+                <span>> INITIALIZING_SYSTEM...</span>
+            </div>
+        `;
+
+        document.body.prepend(loadingOverlay);
+
+        // Remove loading overlay when page is loaded
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.remove();
+                }, 500);
+            }, 500);
+        });
+    }
+
+    // ========================================
+    // CONSOLE EASTER EGG
+    // ========================================
+    function initConsoleEasterEgg() {
+        console.log('%c⚡ CYBERBLOG.SYS ⚡', 'color: #00ffff; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #00ffff;');
+        console.log('%c> SYSTEM_STATUS: ONLINE', 'color: #00ff00; font-family: monospace;');
+        console.log('%c> NEURAL_NETWORK: ACTIVE', 'color: #ff00ff; font-family: monospace;');
+        console.log('%c> ENJOY YOUR STAY IN THE MATRIX', 'color: #00ffff; font-family: monospace;');
+    }
+
+    // ========================================
+    // CKEDITOR PROTECTION - EXCLUDE FROM EFFECTS
+    // ========================================
+    function excludeCKEditorFromEffects() {
+        // Ensure CKEditor elements are never affected by custom animations
+        const ckElements = document.querySelectorAll('.ck-editor, .ck-toolbar, .ck-editor__editable');
+        
+        ckElements.forEach(element => {
+            // Remove any animation classes
+            element.style.animation = 'none';
+            element.style.transition = 'none';
+            element.style.opacity = '1';
+            element.style.visibility = 'visible';
+        });
+
+        // Observer to watch for CKEditor initialization
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.classList && (node.classList.contains('ck-editor') || node.classList.contains('ck-toolbar'))) {
+                        node.style.animation = 'none';
+                        node.style.transition = 'none';
+                        node.style.opacity = '1';
+                        node.style.visibility = 'visible';
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    // ========================================
+    // INITIALIZE ALL EFFECTS
+    // ========================================
+    function init() {
+        // Core effects
+        initMatrixRain();
+        initGlitchEffects();
+        initScrollGlowEffects();
+        initButtonRipple();
+        //initCard3DEffect();
+        initTypingEffect();
+        
+        // UI enhancements
+        initScrollToTop();
+        initNavbarScrollEffect();
+        initFormValidation();
+        
+        // Special effects
+        initLoadingAnimation();
+        initConsoleEasterEgg();
+        
+        // CKEditor protection
+        //excludeCKEditorFromEffects();
+
+        console.log('%c✓ Cyberpunk theme initialized', 'color: #00ff00; font-family: monospace;');
+    }
+
+    // Run on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+    // Reinitialize on page show (for back/forward navigation)
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            init();
+        }
     });
-}
 
-window.scrollToTop = scrollToTop;
+})();

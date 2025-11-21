@@ -1,265 +1,330 @@
 <!-- CKEditor 5 CDN Integration with Enhanced Markdown Support -->
-<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/47.2.0/ckeditor5.css" />
+<link
+  rel="stylesheet"
+  href="https://cdn.ckeditor.com/ckeditor5/47.2.0/ckeditor5.css"
+/>
 <script src="https://cdn.ckeditor.com/ckeditor5/47.2.0/ckeditor5.umd.js"></script>
 
 <script>
-  const {
-    ClassicEditor,
-    Essentials,
-    Bold,
-    Italic,
-    Underline,
-    Strikethrough,
-    Code,
-    Link,
-    Paragraph,
-    Heading,
-    List,
-    BlockQuote,
-    CodeBlock,
-    Table,
-    TableToolbar,
-    Font,
-    HorizontalLine,
-    Autoformat,
-    PasteFromMarkdownExperimental,
-    GeneralHtmlSupport,
-  } = CKEDITOR;
+  
+const {
+	ClassicEditor,
+	Autosave,
+	Essentials,
+	Paragraph,
+	Bold,
+	Italic,
+	Link,
+	AutoLink,
+	Fullscreen,
+	Emoji,
+	Mention,
+	Autoformat,
+	TextTransformation,
+	MediaEmbed,
+	Markdown,
+	PasteFromMarkdownExperimental,
+	Underline,
+	Strikethrough,
+	Code,
+	Subscript,
+	Superscript,
+	FontBackgroundColor,
+	FontColor,
+	FontFamily,
+	FontSize,
+	Highlight,
+	BlockQuote,
+	HorizontalLine,
+	CodeBlock,
+	Indent,
+	IndentBlock,
+	Alignment,
+	ImageInline,
+	ImageToolbar,
+	ImageBlock,
+	ImageUpload,
+	CloudServices,
+	ImageInsertViaUrl,
+	AutoImage,
+	ImageStyle,
+	LinkImage,
+	ImageCaption,
+	ImageTextAlternative,
+	List,
+	TodoList,
+	HtmlComment,
+	ShowBlocks,
+	SourceEditing,
+	GeneralHtmlSupport,
+	Title
+} = window.CKEDITOR;
+
+  
+
+  const LICENSE_KEY =
+    "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjQzNzQzOTksImp0aSI6ImI4ZTgwMzIxLTMxZWYtNGI5ZS1hZWU1LWI5Zjk2M2Y1MGRiYyIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImE2YTFkMGYwIn0.sOZiO4Ij9yIyqpTjxCwIhCRCKsYXzESX1amnDjQbfUn3z-MpJbgDty7QxaPujuTLZf7i4lnZz8dVTdJH3tt5kw";
+
+  const editorConfig = {
+    toolbar: {
+      items: [
+        "undo",
+        "redo",
+        "|",
+        "sourceEditing",
+        "showBlocks",
+        "fullscreen",
+        "|",
+        "fontSize",
+        "fontFamily",
+        "fontColor",
+        "fontBackgroundColor",
+        "|",
+        "bold",
+        "italic",
+        "underline",
+        "strikethrough",
+        "subscript",
+        "superscript",
+        "code",
+        "|",
+        "emoji",
+        "horizontalLine",
+        "link",
+        "mediaEmbed",
+        "highlight",
+        "blockQuote",
+        "codeBlock",
+        "|",
+        "alignment",
+        "|",
+        "bulletedList",
+        "numberedList",
+        "todoList",
+        "outdent",
+        "indent",
+      ],
+      shouldNotGroupWhenFull: false,
+    },
+    plugins: [
+      Alignment,
+      Autoformat,
+      AutoImage,
+      AutoLink,
+      Autosave,
+      BlockQuote,
+      Bold,
+      CloudServices,
+      Code,
+      CodeBlock,
+      Emoji,
+      Essentials,
+      FontBackgroundColor,
+      FontColor,
+      FontFamily,
+      FontSize,
+      Fullscreen,
+      GeneralHtmlSupport,
+      Highlight,
+      HorizontalLine,
+      HtmlComment,
+      ImageBlock,
+      ImageCaption,
+      ImageInline,
+      ImageInsertViaUrl,
+      ImageStyle,
+      ImageTextAlternative,
+      ImageToolbar,
+      ImageUpload,
+      Indent,
+      IndentBlock,
+      Italic,
+      Link,
+      LinkImage,
+      List,
+      Markdown,
+      MediaEmbed,
+      Mention,
+      Paragraph,
+      PasteFromMarkdownExperimental,
+      ShowBlocks,
+      SourceEditing,
+      Strikethrough,
+      Subscript,
+      Superscript,
+      TextTransformation,
+      Title,
+      TodoList,
+      Underline,
+    ],
+    fontFamily: {
+      supportAllValues: true,
+    },
+    fontSize: {
+      options: [10, 12, 14, "default", 18, 20, 22],
+      supportAllValues: true,
+    },
+    fullscreen: {
+      onEnterCallback: (container) =>
+        container.classList.add(
+          "editor-container",
+          "editor-container_classic-editor",
+          "editor-container_include-fullscreen",
+          "main-container"
+        ),
+    },
+    htmlSupport: {
+      allow: [
+        {
+          name: /^.*$/,
+          styles: true,
+          attributes: true,
+          classes: true,
+        },
+      ],
+    },
+    image: {
+      toolbar: [
+        "toggleImageCaption",
+        "imageTextAlternative",
+        "|",
+        "imageStyle:inline",
+        "imageStyle:wrapText",
+        "imageStyle:breakText",
+      ],
+    },
+    initialData:'',
+    licenseKey: LICENSE_KEY,
+    link: {
+      addTargetToExternalLinks: true,
+      defaultProtocol: "https://",
+      decorators: {
+        toggleDownloadable: {
+          mode: "manual",
+          label: "Downloadable",
+          attributes: {
+            download: "file",
+          },
+        },
+      },
+    },
+    mention: {
+      feeds: [
+        {
+          marker: "@",
+          feed: [
+            /* See: https://ckeditor.com/docs/ckeditor5/latest/features/mentions.html */
+          ],
+        },
+      ],
+    },
+    placeholder: "Type or paste your content here!",
+  };
 
   document.addEventListener("DOMContentLoaded", function () {
-    console.log('🚀 CKEditor 5 Markdown-Ready Initialization Started');
+    console.log("🚀 CKEditor 5 Markdown-Ready Initialization Started");
 
     // ✅ Initialize CKEditor 5 for post body (make-post.html)
     const bodyTextarea = document.querySelector("#body");
     if (bodyTextarea) {
-      console.log('📝 Found body textarea, initializing full-featured editor...');
+      console.log(
+        "📝 Found body textarea, initializing full-featured editor..."
+      );
       bodyTextarea.removeAttribute("required");
 
-      ClassicEditor.create(bodyTextarea, {
-        licenseKey: "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjQzNzQzOTksImp0aSI6ImI4ZTgwMzIxLTMxZWYtNGI5ZS1hZWU1LWI5Zjk2M2Y1MGRiYyIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImE2YTFkMGYwIn0.sOZiO4Ij9yIyqpTjxCwIhCRCKsYXzESX1amnDjQbfUn3z-MpJbgDty7QxaPujuTLZf7i4lnZz8dVTdJH3tt5kw",
-        
-        plugins: [
-          Essentials,
-          Paragraph,
-          Heading,
-          Bold,
-          Italic,
-          Underline,
-          Strikethrough,
-          Code,
-          Link,
-          List,
-          BlockQuote,
-          CodeBlock,
-          Table,
-          TableToolbar,
-          Font,
-          HorizontalLine,
-          Autoformat,
-          PasteFromMarkdownExperimental, // ✅ Markdown paste support
-          GeneralHtmlSupport, // ✅ Allow custom HTML attributes
-        ],
+      ClassicEditor.create(bodyTextarea, editorConfig)
+        .then((editor) => {
+          window.bodyEditor = editor;
+          console.log(
+            "✅ Full-featured editor initialized with Markdown paste support"
+          );
+          
+          // 🎨 Apply Cyberpunk Styling
+          
 
-        toolbar: {
-          items: [
-            'heading', '|',
-            'bold', 'italic', 'underline', 'strikethrough', '|',
-            'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
-            'link', 'bulletedList', 'numberedList', '|',
-            'code', 'codeBlock', 'blockQuote', '|',
-            'insertTable', 'horizontalLine', '|',
-            'undo', 'redo'
-          ],
-          shouldNotGroupWhenFull: true
-        },
+          // ⚡ Form Submission Handler
+          const form = bodyTextarea.closest("form");
+          const bodyError = document.getElementById("bodyError");
+          const submitBtn = form ? form.querySelector('[type="submit"]') : null;
 
-        heading: {
-          options: [
-            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-            { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-            { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-            { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-            { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' }
-          ]
-        },
+          if (form) {
+            form.addEventListener("submit", function (e) {
+              e.preventDefault();
+              console.log("📤 Form submission initiated");
 
-        codeBlock: {
-          languages: [
-            { language: 'plaintext', label: 'Plain text' },
-            { language: 'python', label: 'Python' },
-            { language: 'javascript', label: 'JavaScript' },
-            { language: 'typescript', label: 'TypeScript' },
-            { language: 'css', label: 'CSS' },
-            { language: 'html', label: 'HTML' },
-            { language: 'bash', label: 'Bash/Shell' },
-            { language: 'sql', label: 'SQL' },
-            { language: 'java', label: 'Java' },
-            { language: 'json', label: 'JSON' },
-            { language: 'yaml', label: 'YAML' },
-            { language: 'markdown', label: 'Markdown' }
-          ]
-        },
-
-        table: {
-          contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
-        },
-
-        link: {
-          addTargetToExternalLinks: true,
-          defaultProtocol: 'https://',
-          decorators: {
-            openInNewTab: {
-              mode: 'manual',
-              label: 'Open in new tab',
-              defaultValue: true,
-              attributes: {
-                target: '_blank',
-                rel: 'noopener noreferrer'
-              }
-            }
-          }
-        },
-
-        // ✅ Allow HTML attributes for syntax highlighting
-        htmlSupport: {
-          allow: [
-            {
-              name: /.*/,
-              attributes: true,
-              classes: true,
-              styles: true
-            }
-          ]
-        },
-
-        // Font configuration
-        fontSize: {
-          options: [
-            'tiny', 'small', 'default', 'big', 'huge'
-          ]
-        },
-
-        fontFamily: {
-          options: [
-            'default',
-            'Arial, Helvetica, sans-serif',
-            'Courier New, Courier, monospace',
-            'Georgia, serif',
-            'Lucida Sans Unicode, Lucida Grande, sans-serif',
-            'Tahoma, Geneva, sans-serif',
-            'Times New Roman, Times, serif',
-            'Trebuchet MS, Helvetica, sans-serif',
-            'Verdana, Geneva, sans-serif',
-            'JetBrains Mono, monospace'
-          ]
-        }
-      })
-      .then((editor) => {
-        window.bodyEditor = editor;
-        console.log('✅ Full-featured editor initialized with Markdown paste support');
-
-        // 🎨 Apply Cyberpunk Styling
-        const editorElement = editor.ui.view.editable.element;
-        if (editorElement) {
-          editorElement.style.backgroundColor = "rgba(13, 17, 23, 0.8)";
-          editorElement.style.color = "#00ffff";
-          editorElement.style.border = "2px solid var(--cyber-neon-cyan)";
-          editorElement.style.minHeight = "400px";
-          editorElement.style.fontFamily = "'Courier New', monospace";
-          editorElement.style.transition = 'border-color 0.3s ease';
-          editorElement.style.padding = '1.5rem';
-
-          // 🎨 Focus/Blur animations
-          editorElement.addEventListener('focus', () => {
-            editorElement.style.borderColor = 'var(--cyber-neon-pink)';
-            editorElement.style.boxShadow = '0 0 20px rgba(255, 0, 110, 0.3)';
-          });
-          editorElement.addEventListener('blur', () => {
-            editorElement.style.borderColor = 'var(--cyber-neon-cyan)';
-            editorElement.style.boxShadow = 'none';
-          });
-        }
-
-        // ⚡ Form Submission Handler
-        const form = bodyTextarea.closest("form");
-        const bodyError = document.getElementById("bodyError");
-        const submitBtn = form ? form.querySelector('[type="submit"]') : null;
-
-        if (form) {
-          form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            console.log('📤 Form submission initiated');
-
-            // Loading state
-            if (submitBtn) {
-              submitBtn.disabled = true;
-              const originalText = submitBtn.textContent;
-              submitBtn.dataset.originalText = originalText;
-              submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Publishing...';
-            }
-
-            // Transfer CKEditor content to textarea
-            const content = editor.getData();
-            bodyTextarea.value = content;
-
-            // Validation
-            const textContent = content.replace(/<[^>]*>/g, "").trim();
-
-            if (!textContent || textContent.length === 0) {
-              if (bodyError) bodyError.style.display = "block";
-              showCyberAlert("ERROR: Post content cannot be empty!");
-
-              // Reset button state
+              // Loading state
               if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = submitBtn.dataset.originalText || 'Submit Post';
+                submitBtn.disabled = true;
+                const originalText = submitBtn.textContent;
+                submitBtn.dataset.originalText = originalText;
+                submitBtn.innerHTML =
+                  '<span class="spinner-border spinner-border-sm me-2"></span>Publishing...';
               }
 
-              if (editorElement) {
-                editorElement.scrollIntoView({ behavior: "smooth", block: "center" });
-                editorElement.focus();
+              // Transfer CKEditor content to textarea
+              const content = editor.getData();
+              bodyTextarea.value = content;
+
+              // Validation
+              const textContent = content.replace(/<[^>]*>/g, "").trim();
+
+              if (!textContent || textContent.length === 0) {
+                if (bodyError) bodyError.style.display = "block";
+                showCyberAlert("ERROR: Post content cannot be empty!");
+
+                // Reset button state
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.textContent =
+                    submitBtn.dataset.originalText || "Submit Post";
+                }
+
+                if (editorElement) {
+                  editorElement.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
+                  editorElement.focus();
+                }
+                return false;
               }
-              return false;
-            }
 
-            // Hide error if validation passes
-            if (bodyError) bodyError.style.display = "none";
+              // Hide error if validation passes
+              if (bodyError) bodyError.style.display = "none";
 
-            console.log('✅ Validation passed, submitting form');
-            // Submit using prototype to bypass form field name conflicts
-            HTMLFormElement.prototype.submit.call(form);
-          });
-        }
+              console.log("✅ Validation passed, submitting form");
+              // Submit using prototype to bypass form field name conflicts
+              HTMLFormElement.prototype.submit.call(form);
+            });
+          }
 
-        // 💡 Add Markdown paste hint
-        console.log('💡 TIP: You can now paste Markdown directly into the editor!');
-        console.log('   Try pasting: **bold** *italic* `code` or fenced code blocks');
-      })
-      .catch((error) => {
-        console.error("❌ CKEditor 5 initialization error:", error);
-        // Fallback to styled textarea
-        bodyTextarea.style.display = "block";
-        bodyTextarea.style.backgroundColor = "rgba(13, 17, 23, 0.8)";
-        bodyTextarea.style.color = "#00ffff";
-        bodyTextarea.style.border = "2px solid var(--cyber-neon-cyan)";
-        bodyTextarea.style.padding = "1rem";
-        bodyTextarea.style.fontFamily = "'Courier New', monospace";
-        bodyTextarea.style.minHeight = "400px";
-        bodyTextarea.classList.add('form-control');
-      });
+          // 💡 Add Markdown paste hint
+          console.log(
+            "💡 TIP: You can now paste Markdown directly into the editor!"
+          );
+          console.log(
+            "   Try pasting: **bold** *italic* `code` or fenced code blocks"
+          );
+        })
+        .catch((error) => {
+          console.error("❌ CKEditor 5 initialization error:", error);
+        });
     } else {
-      console.log('ℹ️  Body textarea not found (not on post creation page)');
+      console.log("ℹ️  Body textarea not found (not on post creation page)");
     }
 
     // ✅ Initialize simplified editor for comments (post.html)
     const commentTextarea = document.querySelector("#comment_text");
     if (commentTextarea) {
-      console.log('💬 Found comment textarea, initializing lightweight editor...');
+      console.log(
+        "💬 Found comment textarea, initializing lightweight editor..."
+      );
       commentTextarea.removeAttribute("required");
 
       ClassicEditor.create(commentTextarea, {
-        licenseKey: "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjQzNzQzOTksImp0aSI6ImI4ZTgwMzIxLTMxZWYtNGI5ZS1hZWU1LWI5Zjk2M2Y1MGRiYyIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImE2YTFkMGYwIn0.sOZiO4Ij9yIyqpTjxCwIhCRCKsYXzESX1amnDjQbfUn3z-MpJbgDty7QxaPujuTLZf7i4lnZz8dVTdJH3tt5kw",
-        
+        licenseKey:
+          "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjQzNzQzOTksImp0aSI6ImI4ZTgwMzIxLTMxZWYtNGI5ZS1hZWU1LWI5Zjk2M2Y1MGRiYyIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImE2YTFkMGYwIn0.sOZiO4Ij9yIyqpTjxCwIhCRCKsYXzESX1amnDjQbfUn3z-MpJbgDty7QxaPujuTLZf7i4lnZz8dVTdJH3tt5kw",
+
         plugins: [
           Essentials,
           Paragraph,
@@ -269,88 +334,100 @@
           Link,
           List,
           BlockQuote,
-          PasteFromMarkdownExperimental // ✅ Markdown paste for comments too
+          PasteFromMarkdownExperimental, // ✅ Markdown paste for comments too
         ],
 
-        toolbar: ['bold', 'italic', 'code', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+        toolbar: [
+          "bold",
+          "italic",
+          "code",
+          "link",
+          "bulletedList",
+          "numberedList",
+          "blockQuote",
+        ],
 
         link: {
           addTargetToExternalLinks: true,
-          defaultProtocol: 'https://'
-        }
+          defaultProtocol: "https://",
+        },
       })
-      .then((editor) => {
-        window.commentEditor = editor;
-        console.log('✅ Comment editor initialized with Markdown paste');
+        .then((editor) => {
+          window.commentEditor = editor;
+          console.log("✅ Comment editor initialized with Markdown paste");
 
-        // Cyberpunk styling
-        const editorElement = editor.ui.view.editable.element;
-        if (editorElement) {
-          editorElement.style.backgroundColor = "rgba(13, 17, 23, 0.8)";
-          editorElement.style.color = "#00ffff";
-          editorElement.style.border = "2px solid var(--cyber-neon-cyan)";
-          editorElement.style.minHeight = "150px";
-          editorElement.style.transition = 'border-color 0.3s ease';
-          editorElement.style.padding = '1rem';
+          // Cyberpunk styling
+          const editorElement = editor.ui.view.editable.element;
+          if (editorElement) {
+            editorElement.style.backgroundColor = "rgba(13, 17, 23, 0.8)";
+            editorElement.style.color = "#00ffff";
+            editorElement.style.border = "2px solid var(--cyber-neon-cyan)";
+            editorElement.style.minHeight = "150px";
+            editorElement.style.transition = "border-color 0.3s ease";
+            editorElement.style.padding = "1rem";
 
-          editorElement.addEventListener('focus', () => {
-            editorElement.style.borderColor = 'var(--cyber-neon-pink)';
-          });
-          editorElement.addEventListener('blur', () => {
-            editorElement.style.borderColor = 'var(--cyber-neon-cyan)';
-          });
-        }
+            editorElement.addEventListener("focus", () => {
+              editorElement.style.borderColor = "var(--cyber-neon-pink)";
+            });
+            editorElement.addEventListener("blur", () => {
+              editorElement.style.borderColor = "var(--cyber-neon-cyan)";
+            });
+          }
 
-        // Form submission
-        const form = commentTextarea.closest("form");
-        const submitBtn = form ? form.querySelector('[type="submit"]') : null;
+          // Form submission
+          const form = commentTextarea.closest("form");
+          const submitBtn = form ? form.querySelector('[type="submit"]') : null;
 
-        if (form) {
-          form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            console.log('💬 Comment submission initiated');
-
-            if (submitBtn) {
-              submitBtn.disabled = true;
-              submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Posting...';
-            }
-
-            const content = editor.getData();
-            commentTextarea.value = content;
-
-            const textContent = content.replace(/<[^>]*>/g, "").trim();
-            if (!textContent || textContent.length === 0) {
-              showCyberAlert("ERROR: Comment cannot be empty!");
+          if (form) {
+            form.addEventListener("submit", function (e) {
+              e.preventDefault();
+              console.log("💬 Comment submission initiated");
 
               if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Submit Comment";
+                submitBtn.disabled = true;
+                submitBtn.innerHTML =
+                  '<span class="spinner-border spinner-border-sm me-2"></span>Posting...';
               }
 
-              if (editorElement) {
-                editorElement.scrollIntoView({ behavior: "smooth", block: "center" });
-                editorElement.focus();
-              }
-              return false;
-            }
+              const content = editor.getData();
+              commentTextarea.value = content;
 
-            console.log('✅ Comment validation passed, submitting');
-            HTMLFormElement.prototype.submit.call(form);
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("❌ Comment editor initialization error:", error);
-        commentTextarea.style.display = "block";
-        commentTextarea.style.backgroundColor = "rgba(13, 17, 23, 0.8)";
-        commentTextarea.style.color = "#00ffff";
-        commentTextarea.style.border = "2px solid var(--cyber-neon-cyan)";
-        commentTextarea.style.padding = "0.75rem";
-        commentTextarea.style.fontFamily = "'Courier New', monospace";
-        commentTextarea.classList.add('form-control');
-      });
+              const textContent = content.replace(/<[^>]*>/g, "").trim();
+              if (!textContent || textContent.length === 0) {
+                showCyberAlert("ERROR: Comment cannot be empty!");
+
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = "Submit Comment";
+                }
+
+                if (editorElement) {
+                  editorElement.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
+                  editorElement.focus();
+                }
+                return false;
+              }
+
+              console.log("✅ Comment validation passed, submitting");
+              HTMLFormElement.prototype.submit.call(form);
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("❌ Comment editor initialization error:", error);
+          commentTextarea.style.display = "block";
+          commentTextarea.style.backgroundColor = "rgba(13, 17, 23, 0.8)";
+          commentTextarea.style.color = "#00ffff";
+          commentTextarea.style.border = "2px solid var(--cyber-neon-cyan)";
+          commentTextarea.style.padding = "0.75rem";
+          commentTextarea.style.fontFamily = "'Courier New', monospace";
+          commentTextarea.classList.add("form-control");
+        });
     } else {
-      console.log('ℹ️  Comment textarea not found (not on post detail page)');
+      console.log("ℹ️  Comment textarea not found (not on post detail page)");
     }
   });
 
@@ -424,166 +501,4 @@
 </script>
 
 <style>
-  /* 🎨 Enhanced CKEditor 5 Cyberpunk Theme */
-  .ck.ck-editor__main > .ck-editor__editable {
-    background-color: rgba(13, 17, 23, 0.8) !important;
-    color: #00ffff !important;
-    border: 2px solid var(--cyber-neon-cyan) !important;
-    font-family: "Courier New", monospace !important;
-    transition: all 0.3s ease !important;
-    line-height: 1.8 !important;
-  }
-
-  .ck.ck-editor__main > .ck-editor__editable:focus {
-    border-color: var(--cyber-neon-pink) !important;
-    box-shadow: 0 0 25px rgba(255, 0, 110, 0.4) !important;
-    outline: none !important;
-  }
-
-  .ck.ck-toolbar {
-    background-color: rgba(13, 17, 23, 0.95) !important;
-    border: 2px solid var(--cyber-neon-pink) !important;
-    border-bottom: none !important;
-  }
-
-  .ck.ck-button:not(.ck-disabled):hover {
-    background-color: rgba(0, 255, 255, 0.2) !important;
-    transition: background-color 0.2s ease !important;
-  }
-
-  .ck.ck-button.ck-on {
-    background-color: rgba(0, 255, 255, 0.3) !important;
-    color: var(--cyber-neon-cyan) !important;
-  }
-
-  /* Code block styling with syntax highlight readiness */
-  .ck-content pre {
-    background: rgba(0, 0, 0, 0.7) !important;
-    border: 1px solid #00ffff !important;
-    color: #00ff00 !important;
-    padding: 1.25rem !important;
-    border-radius: 6px !important;
-    font-family: "JetBrains Mono", "Courier New", monospace !important;
-    overflow-x: auto !important;
-    line-height: 1.6 !important;
-    box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1) !important;
-  }
-
-  .ck-content code {
-    background: rgba(0, 255, 255, 0.2) !important;
-    color: #00ffff !important;
-    padding: 0.25rem 0.5rem !important;
-    border-radius: 4px !important;
-    font-family: "Courier New", monospace !important;
-    border: 1px solid rgba(0, 255, 255, 0.3) !important;
-  }
-
-  /* Enhanced blockquote */
-  .ck-content blockquote {
-    border-left: 4px solid #ff006e !important;
-    background: linear-gradient(90deg, rgba(255, 0, 110, 0.15), transparent) !important;
-    padding: 1rem 1rem 1rem 1.5rem !important;
-    color: #ff006e !important;
-    font-style: italic !important;
-    margin: 1.5rem 0 !important;
-    border-radius: 0 4px 4px 0 !important;
-  }
-
-  /* Cyberpunk horizontal line */
-  .ck-content hr {
-    border: 0 !important;
-    height: 2px !important;
-    background: linear-gradient(90deg, transparent, var(--cyber-neon-cyan), transparent) !important;
-    margin: 2.5rem 0 !important;
-    opacity: 0.6 !important;
-  }
-
-  /* Enhanced tables */
-  .ck-content table {
-    border-collapse: collapse !important;
-    border: 2px solid var(--cyber-neon-cyan) !important;
-    width: 100% !important;
-    margin: 1.5rem 0 !important;
-    background: rgba(13, 17, 23, 0.5) !important;
-  }
-
-  .ck-content table td,
-  .ck-content table th {
-    border: 1px solid var(--cyber-neon-cyan) !important;
-    padding: 0.75rem !important;
-  }
-
-  .ck-content table th {
-    background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.1)) !important;
-    font-weight: bold !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-  }
-
-  .ck-content table tr:hover {
-    background: rgba(0, 255, 255, 0.05) !important;
-  }
-
-  /* Links */
-  .ck-content a {
-    color: var(--cyber-neon-pink) !important;
-    text-decoration: underline !important;
-    transition: all 0.2s ease !important;
-  }
-
-  .ck-content a:hover {
-    color: var(--cyber-neon-cyan) !important;
-    text-shadow: 0 0 8px rgba(0, 255, 255, 0.6) !important;
-  }
-
-  /* Lists */
-  .ck-content ul,
-  .ck-content ol {
-    padding-left: 2.5rem !important;
-    margin: 1rem 0 !important;
-  }
-
-  .ck-content li {
-    margin: 0.5rem 0 !important;
-    line-height: 1.8 !important;
-  }
-
-  /* Headings */
-  .ck-content h1, .ck-content h2, .ck-content h3, .ck-content h4 {
-    color: var(--cyber-neon-cyan) !important;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3) !important;
-    margin-top: 1.5rem !important;
-    margin-bottom: 1rem !important;
-  }
-
-  /* Toolbar positioning */
-  .ck.ck-toolbar__items {
-    z-index: 1050;
-  }
-
-  .ck.ck-reset_all {
-    z-index: 1050;
-  }
-
-  /* Loading spinner animation */
-  @keyframes spinner-border {
-    to { transform: rotate(360deg); }
-  }
-
-  .spinner-border {
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    vertical-align: text-bottom;
-    border: 0.15em solid currentColor;
-    border-right-color: transparent;
-    border-radius: 50%;
-    animation: spinner-border 0.75s linear infinite;
-  }
-
-  .spinner-border-sm {
-    width: 0.875rem;
-    height: 0.875rem;
-    border-width: 0.125em;
-  }
 </style>
