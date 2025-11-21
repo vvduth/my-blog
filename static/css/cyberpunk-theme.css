@@ -100,6 +100,7 @@ body::after {
   border-bottom: 2px solid var(--cyber-cyan);
   box-shadow: 0 0 var(--cyber-glow-size) rgba(0, 255, 255, 0.3);
   padding: 1rem 0;
+  z-index: 1000 !important; /* Below CKEditor toolbar */
 }
 
 .navbar-brand-cyber {
@@ -859,8 +860,51 @@ select.form-control-cyber {
 
 
 /* ========================================
-   POST EDITOR - DISABLE HOVER EFFECTS
+   POST EDITOR - DISABLE HOVER EFFECTS & CKEDITOR PROTECTION
    ======================================== */
+/* CKEditor toolbar must be above navbar and sticky */
+.ck.ck-toolbar {
+  z-index: 1050 !important; /* Above navbar (1000) */
+  position: sticky !important;
+  top: 70px !important; /* Below navbar height */
+  background: var(--cyber-bg-card) !important;
+  border-bottom: 2px solid var(--cyber-cyan) !important;
+}
+
+/* Ensure toolbar stays sticky in all states */
+.ck-sticky-panel__content_sticky .ck-toolbar {
+  position: sticky !important;
+  top: 70px !important;
+}
+
+/* Make editor container have relative positioning for sticky to work */
+.ck-editor {
+  position: relative !important;
+}
+
+/* CKEditor elements protection */
+.ck-editor,
+.ck-editor *,
+.ck-toolbar,
+.ck-toolbar *,
+.ck-editor__editable,
+.ck-editor__editable * {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Keep toolbar visible in all states */
+.ck-editor__editable:focus ~ .ck-toolbar,
+.ck-editor__editable:not(:focus) ~ .ck-toolbar,
+.ck-focused .ck-toolbar,
+.ck-blurred .ck-toolbar {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 /* Disable hover effects on post editor form */
 #postForm .form-control-cyber:hover,
 #postForm .form-control-cyber:focus {

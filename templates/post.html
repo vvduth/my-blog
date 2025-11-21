@@ -77,12 +77,11 @@
                             <div class="terminal-text mb-3">
                                 <h5><span class="text-cyber-cyan">></span> NEW_COMMENT</h5>
                             </div>
-                            {{ ckeditor.load() }}
-                            {{ ckeditor.config(name="comment_text") }}
+                            {% include "ckEditor5.html" %}
                             <form method="POST" action="{{ url_for('show_post', post_id=post.id) }}" class="form-cyber">
                                 {{ form.hidden_tag() }}
                                 <div class="form-group-cyber mb-3">
-                                    {{ form.comment_text(class="form-control-cyber", style="min-height: 150px;") }}
+                                    {{ form.comment_text(class="form-control-cyber", id="comment_text", style="min-height: 150px;") }}
                                     {% if form.comment_text.errors %}
                                         <div class="terminal-text text-cyber-pink mt-2">
                                             {% for error in form.comment_text.errors %}
