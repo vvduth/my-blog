@@ -185,7 +185,8 @@ def filter_by_tag(tag_name):
 
 @app.route('/')
 def get_all_posts():
-    predefined_tags = ["DevOps", "VPC", "AI-ML", "Compute", "Database", "Security", "Website", "Kubernetes", "Docker"]
+    predefined_tags = ["DevOps", "VPC", "AI-ML", "Compute", "Database", "Security", "Website", "Kubernetes", "Docker"
+                       , "React", "Coding" ]
     post_per_page = 8
     page_index = request.args.get('page_index', 1, type=int)
     # Order by ID descending to get newest posts first
@@ -379,4 +380,4 @@ def forbidden_error(error):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=False, port=5003)
+    app.run(host="0.0.0.0", debug=True, port=5003)
